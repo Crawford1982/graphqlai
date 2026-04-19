@@ -1,39 +1,70 @@
-# graphqlai — milestones
+# graphqlai milestones
 
-Ship order is **vertical slices** with tests—no “big bang” GraphQL platform.
+Ship order stays **vertical slices with tests**. Each milestone must remain bounded, replayable, and CI-safe.
 
-## Milestone 1 — **Shipped (current)**
+## Status summary
 
-- Introspection JSON → normalized operations
-- Typed query compilation (scalar vs composite selection rules)
-- POST JSON envelope execution + scope + rate limit
+- **M1 complete**
+- **M2 complete (first strong pass)**
+- **M3 started (first usable pass)**
+- **M4+ planned**
+
+## Milestone 1 (complete)
+
+- Introspection JSON -> normalized operations
+- Typed query compilation (scalar/composite-safe)
+- POST JSON execution + scope + rate limits
 - JSON report + `replayCurl`
-- Regex signal pack (`data/bounty-signals.json`) + verbose-error heuristic
-- CLI **`graphqlai`**, offline **`npm test`**
+- Deterministic signal matching (`data/bounty-signals.json`)
+- Offline test suite
 
-## Milestone 2 — Schema graph & stateful chains (implemented in this branch)
+## Milestone 2 (complete, iterative hardening ongoing)
 
-- Infer **mutation → query** edges from schema operation signatures
-- **`campaignPlanner`**: build bounded follow-up chain requests from mutation response IDs
-- **Cross-principal same-body checker** via query replay (`--auth-alt`, `--principal-replay-budget`)
+- Mutation->query dependency inference (`src/schema/campaignPlanner.js`)
+- Bounded chain follow-ups (`--chain-budget`)
+- Alternate principal replay (`--auth-alt`, `--auth-alt-env`, `--principal-replay-budget`)
+- Principal findings:
+  - same-body overlap
+  - 403->200 status escalation
+  - top-level field-shape difference
 
-## Milestone 3 — GraphQL-specific abuse modes
+### M2 next hardening items
 
-- **Batch / alias** payloads (bounded count)
-- **Depth / complexity** ladders with timing + error-shape novelty
-- Expand **`ResponseIndex` / novelty** beyond binary fingerprints for GraphQL `errors[]`
+- Better nested field-level diffs (not only top-level keys)
+- Better chain candidate precision for non-ID patterns
+- Replay prioritization based on novelty/sensitivity, not simple query order
 
-## Milestone 4 — Optional bounded AI
+## Milestone 3 (in progress, usable now)
 
-- **Advisor only**: rank operations / fields for budget; suggest selection expansions; classify findings from **summaries**—never raw secrets in prompts
-- **`executionPlanCompiler`**: validate typed plan JSON → `FuzzCase[]` (symmetric with M1 compiler discipline)
+- Bounded batch/alias probes (`--batch-budget`)
+- Bounded depth-ladder probes (`--depth-budget`, `--max-depth`)
 
-## Milestone 5 — Ingest without introspection
+### M3 next hardening items
 
-- SDL file support + **manual seed** documents when introspection is disabled
+- Replace synthetic depth aliases with schema-aware nested selections
+- Add dedicated anomaly scoring for batch/depth results (latency, error shape, partial-data anomalies)
+- Add targeted M3 checkers (batch amplification and depth-complexity behavior)
+- Expand batch probe generation (higher multiplicity, multi-ID enumeration, mixed operation patterns)
+
+## Milestone 4 (planned) - optional bounded AI
+
+- Advisor only (ranking and classification), never direct network execution
+- Typed plan JSON validated by compiler before execution
+- Prompt inputs stay metadata/summaries only (no sensitive raw payloads)
+
+## Milestone 5 (planned) - ingest without introspection
+
+- SDL ingest
+- Manual seed operation files for introspection-disabled targets
+
+## Additional quality track (from external review feedback)
+
+- GraphQL-envelope-aware novelty scoring (`data/errors/field-shape`) as a cross-cutting improvement
+- Deeper field-level principal diffing (beyond top-level key comparison)
+- Replay prioritization informed by novelty/sensitivity signals
 
 ## Non-goals (until core is solid)
 
-- Subscriptions / WS gateway fuzzing
-- Full GraphQL federation matrix
+- Subscriptions/WebSocket fuzzing
+- Federation-wide orchestration
 - GUI-first workflows (CLI + JSON report remain source of truth)

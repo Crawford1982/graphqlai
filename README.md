@@ -32,6 +32,11 @@ graphqlai --help
 npx graphqlai --target "https://api.example.com/graphql" --schema ./path/to/introspection.json --scope-file ./scope.yaml --max-requests 64
 ```
 
+Progress and handoff notes live in:
+
+- `docs/STATUS.md`
+- `docs/MILESTONES.md`
+
 ### Scope (recommended)
 
 Use **`--scope-file`** with `allowHosts` and optional `pathPrefixes` so accidental host/path drift fails closed. Example:
