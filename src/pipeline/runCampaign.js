@@ -101,7 +101,7 @@ export async function runCampaign(cfg) {
 
   if (authAltHeaderNorm && Number(cfg.principalReplayBudget || 0) > 0) {
     const candidates = cases
-      .filter((c) => c.family === 'GRAPHQL_QUERY')
+      .filter((c) => c.family === 'GRAPHQL_QUERY' || c.family === 'GRAPHQL_MUTATION')
       .slice(0, Math.max(0, Number(cfg.principalReplayBudget || 0)))
       .map((c) => ({ ...c, id: `${c.id}:authAlt`, family: 'GRAPHQL_AUTH_ALT_REPLAY' }));
     if (candidates.length) {

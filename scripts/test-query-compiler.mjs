@@ -16,3 +16,24 @@ if (Object.keys(body.variables).length) {
   process.exit(1);
 }
 console.log('query compiler: ok');
+
+const inputSchema = loadIntrospectionFromFile(
+  path.join(here, '../fixtures/example-input-object-introspection.json')
+);
+const createUser = inputSchema.operations.find((o) => o.kind === 'mutation' && o.fieldName === 'createUser');
+if (!createUser) {
+  console.error('missing createUser op');
+  process.exit(1);
+}
+const mutBody = compileOperationToRequestBody(inputSchema, createUser);
+const v0 = mutBody.variables.v0;
+if (!v0 || typeof v0 !== 'object' || Array.isArray(v0)) {
+  console.error('expected input object variable', mutBody.variables);
+  process.exit(1);
+}
+const obj = /** @type {Record<string, unknown>} */ (v0);
+if (typeof obj.name !== 'string' || typeof obj.status !== 'string') {
+  console.error('expected nested object with enum/string fields', obj);
+  process.exit(1);
+}
+console.log('query compiler input object: ok');

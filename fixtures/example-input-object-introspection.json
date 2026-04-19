@@ -1,0 +1,97 @@
+{
+  "data": {
+    "__schema": {
+      "queryType": { "name": "Query" },
+      "mutationType": { "name": "Mutation" },
+      "types": [
+        {
+          "kind": "OBJECT",
+          "name": "Query",
+          "fields": [
+            {
+              "name": "hello",
+              "args": [],
+              "type": { "kind": "SCALAR", "name": "String", "ofType": null }
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Mutation",
+          "fields": [
+            {
+              "name": "createUser",
+              "args": [
+                {
+                  "name": "input",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": { "kind": "INPUT_OBJECT", "name": "CreateUserInput", "ofType": null }
+                  }
+                }
+              ],
+              "type": { "kind": "OBJECT", "name": "User", "ofType": null }
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "User",
+          "fields": [
+            { "name": "id", "args": [], "type": { "kind": "SCALAR", "name": "ID", "ofType": null } },
+            { "name": "name", "args": [], "type": { "kind": "SCALAR", "name": "String", "ofType": null } }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "CreateUserInput",
+          "inputFields": [
+            {
+              "name": "name",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": { "kind": "SCALAR", "name": "String", "ofType": null }
+              }
+            },
+            {
+              "name": "status",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": { "kind": "ENUM", "name": "UserStatus", "ofType": null }
+              }
+            },
+            {
+              "name": "profile",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProfileInput",
+                "ofType": null
+              }
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProfileInput",
+          "inputFields": [
+            {
+              "name": "age",
+              "type": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            }
+          ]
+        },
+        {
+          "kind": "ENUM",
+          "name": "UserStatus",
+          "enumValues": [{ "name": "ACTIVE" }, { "name": "INACTIVE" }]
+        },
+        { "kind": "SCALAR", "name": "String" },
+        { "kind": "SCALAR", "name": "ID" },
+        { "kind": "SCALAR", "name": "Int" }
+      ]
+    }
+  }
+}

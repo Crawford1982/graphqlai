@@ -1,0 +1,27 @@
+{
+  "data": {
+    "__schema": {
+      "queryType": { "name": "Query" },
+      "mutationType": { "name": "Mutation" },
+      "types": [
+        {
+          "kind": "OBJECT",
+          "name": "Query",
+          "fields": [
+            { "name": "publicInfo", "args": [], "type": { "kind": "SCALAR", "name": "String", "ofType": null } },
+            { "name": "adminStats", "args": [], "type": { "kind": "SCALAR", "name": "String", "ofType": null } }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Mutation",
+          "fields": [
+            { "name": "deleteUser", "args": [{ "name": "id", "type": { "kind": "SCALAR", "name": "ID", "ofType": null } }], "type": { "kind": "SCALAR", "name": "String", "ofType": null } }
+          ]
+        },
+        { "kind": "SCALAR", "name": "String" },
+        { "kind": "SCALAR", "name": "ID" }
+      ]
+    }
+  }
+}

@@ -17,3 +17,17 @@ if (!jb || typeof jb.query !== 'string') {
   process.exit(1);
 }
 console.log('hypothesis engine: ok');
+
+const prioritySchema = loadIntrospectionFromFile(
+  path.join(here, '../fixtures/example-priority-introspection.json')
+);
+const prioritized = buildCampaignCases(prioritySchema, 'https://example.com/graphql', { maxRequests: 2 });
+if (prioritized.length !== 2) {
+  console.error('expected capped 2 cases', prioritized.length);
+  process.exit(1);
+}
+if (prioritized[0].family !== 'GRAPHQL_MUTATION') {
+  console.error('expected mutation prioritized first', prioritized.map((c) => c.id));
+  process.exit(1);
+}
+console.log('hypothesis prioritization: ok');
