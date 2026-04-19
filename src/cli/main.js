@@ -5,6 +5,12 @@ import { runCampaign } from '../pipeline/runCampaign.js';
 import { isCiMode, applyCiProfile, resolveExitCode } from './ci.js';
 import { resolveAuthBundle } from './authRefs.js';
 import { loadScopePolicy } from '../safety/scopePolicy.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const pkgPath = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'package.json');
+const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 
 function printHelp() {
   console.log(`
@@ -43,6 +49,9 @@ export async function main() {
     maxResponseBodyChars: Number.isFinite(args.maxResponseBodyChars) ? args.maxResponseBodyChars : undefined,
     chainBudget: Number.isFinite(args.chainBudget) ? args.chainBudget : 8,
     principalReplayBudget: Number.isFinite(args.principalReplayBudget) ? args.principalReplayBudget : 12,
+    batchBudget: Number.isFinite(args.batchBudget) ? args.batchBudget : 8,
+    depthBudget: Number.isFinite(args.depthBudget) ? args.depthBudget : 8,
+    maxDepth: Number.isFinite(args.maxDepth) ? args.maxDepth : 5,
   };
   if (ci) applyCiProfile(cfg);
 
@@ -78,6 +87,10 @@ export async function main() {
     maxResponseBodyChars: /** @type {number|undefined} */ (cfg.maxResponseBodyChars),
     chainBudget: /** @type {number} */ (cfg.chainBudget),
     principalReplayBudget: /** @type {number} */ (cfg.principalReplayBudget),
+    batchBudget: /** @type {number} */ (cfg.batchBudget),
+    depthBudget: /** @type {number} */ (cfg.depthBudget),
+    maxDepth: /** @type {number} */ (cfg.maxDepth),
+    toolVersion: pkg.version,
   });
 
   console.log(`\nReport: ${outfile}`);

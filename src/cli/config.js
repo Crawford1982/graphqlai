@@ -8,6 +8,9 @@ export function parseArgv(argv) {
     authAltEnv: null,
     principalReplayBudget: 12,
     chainBudget: 8,
+    batchBudget: 8,
+    depthBudget: 8,
+    maxDepth: 5,
     concurrency: 4,
     maxRequests: 120,
     timeoutMs: 8000,
@@ -32,6 +35,9 @@ export function parseArgv(argv) {
     else if (a === '--auth-alt-env') args.authAltEnv = argv[++i];
     else if (a === '--principal-replay-budget') args.principalReplayBudget = Number(argv[++i]);
     else if (a === '--chain-budget') args.chainBudget = Number(argv[++i]);
+    else if (a === '--batch-budget') args.batchBudget = Number(argv[++i]);
+    else if (a === '--depth-budget') args.depthBudget = Number(argv[++i]);
+    else if (a === '--max-depth') args.maxDepth = Number(argv[++i]);
     else if (a === '--concurrency' || a === '-c') args.concurrency = Number(argv[++i]);
     else if (a === '--max-requests') args.maxRequests = Number(argv[++i]);
     else if (a === '--timeout-ms') args.timeoutMs = Number(argv[++i]);

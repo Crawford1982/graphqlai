@@ -60,6 +60,12 @@ graphqlai -t ... -s ... --auth-env PRIMARY_TOKEN --auth-alt-env ALT_TOKEN --prin
 - `--auth-alt` / `--auth-alt-env`: alternate principal
 - `--principal-replay-budget <n>`: how many query cases to replay as alt principal (default `12`)
 
+### Milestone 3 options
+
+- `--batch-budget <n>`: cap batch/alias probe requests (default `8`)
+- `--depth-budget <n>`: cap depth-ladder probe requests (default `8`)
+- `--max-depth <n>`: max synthetic depth level used by depth-ladder probes (default `5`)
+
 ### CI
 
 - **`--ci`** or **`GRAPHQLAI_CI=1`** — tightens concurrency, request caps, and default RPS.

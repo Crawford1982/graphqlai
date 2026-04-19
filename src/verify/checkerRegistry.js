@@ -13,4 +13,11 @@ export const GRAPHQLAI_CHECKERS = [
     owaspMapping: ['API1:2023', 'API5:2023'],
     bountyTierHint: 'high',
   },
+  {
+    checkerId: 'cross_principal_status_escalation',
+    title: 'Status pattern indicates privilege escalation',
+    precondition: 'Primary gets 403 while alternate gets 200 on same request lineage',
+    owaspMapping: ['API1:2023', 'API5:2023'],
+    bountyTierHint: 'high',
+  },
 ];

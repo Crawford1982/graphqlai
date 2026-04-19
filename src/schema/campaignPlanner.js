@@ -10,6 +10,34 @@ function isIdLikeArg(a) {
   return /id$/i.test(n);
 }
 
+function unwrapTypeRef(t) {
+  let cur = t;
+  while (cur && (cur.kind === 'NON_NULL' || cur.kind === 'LIST')) cur = cur.ofType;
+  return cur || null;
+}
+
+function maybeScalarName(t) {
+  const u = unwrapTypeRef(t);
+  return u?.kind === 'SCALAR' ? String(u.name || '') : null;
+}
+
+function pickBestCandidates(ids, argTypeRef) {
+  if (!ids.length) return [];
+  const scalar = maybeScalarName(argTypeRef);
+  const uniq = [...new Set(ids.map((v) => String(v)))];
+
+  const scored = uniq.map((v) => {
+    let score = 0;
+    if (/^[0-9]+$/.test(v)) score += 1;
+    if (/^[0-9a-f-]{16,}$/i.test(v)) score += 2;
+    if (scalar === 'Int' && /^[0-9]+$/.test(v)) score += 3;
+    if (scalar === 'ID') score += 2;
+    return { v, score };
+  });
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, 3).map((s) => s.v);
+}
+
 export function inferMutationToQueryEdges(schema) {
   const queries = schema.operations.filter((o) => o.kind === 'query');
   const muts = schema.operations.filter((o) => o.kind === 'mutation');
@@ -20,6 +48,16 @@ export function inferMutationToQueryEdges(schema) {
     for (const q of queries) {
       for (const a of q.args || []) {
         if (!isIdLikeArg(a)) continue;
+        const mutationReturns = String(m.returnNamedType || '');
+        const queryReturns = String(q.returnNamedType || '');
+        const argScalar = maybeScalarName(a.typeRef);
+
+        // Deepen inference: prefer edges with return-type affinity or ID-like arg scalar.
+        const typeAffinity =
+          (mutationReturns && queryReturns && mutationReturns === queryReturns) ||
+          argScalar === 'ID' ||
+          argScalar === 'Int';
+        if (!typeAffinity) continue;
         edges.push({ mutationField: m.fieldName, queryField: q.fieldName, argName: a.name });
       }
     }
@@ -55,23 +93,27 @@ export function buildMutationFollowUpCases(execResults, casesById, schema, endpo
       if (out.length >= budget) break;
       const q = qByName.get(e.queryField);
       if (!q) continue;
-      const idv = ids[0];
-      const body = compileOperationToRequestBody(schema, q, {
-        opLabel: `chain_${field}_to_${q.fieldName}`,
-        variableOverrides: { [e.argName]: idv },
-      });
-      out.push({
-        id: `${cid}:chain:${q.fieldName}:${out.length}`,
-        method: 'POST',
-        url: endpointUrl,
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        family: 'GRAPHQL_CHAIN_FOLLOWUP',
-        meta: {
-          jsonBody: { query: body.query, variables: body.variables },
-          contentType: 'application/json',
-          graphql: { operationKind: 'query', fieldName: q.fieldName },
-        },
-      });
+      const qArg = (q.args || []).find((a) => a.name === e.argName);
+      const candidateIds = pickBestCandidates(ids, qArg?.typeRef);
+      for (const idv of candidateIds) {
+        if (out.length >= budget) break;
+        const body = compileOperationToRequestBody(schema, q, {
+          opLabel: `chain_${field}_to_${q.fieldName}`,
+          variableOverrides: { [e.argName]: idv },
+        });
+        out.push({
+          id: `${cid}:chain:${q.fieldName}:${out.length}`,
+          method: 'POST',
+          url: endpointUrl,
+          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+          family: 'GRAPHQL_CHAIN_FOLLOWUP',
+          meta: {
+            jsonBody: { query: body.query, variables: body.variables },
+            contentType: 'application/json',
+            graphql: { operationKind: 'query', fieldName: q.fieldName },
+          },
+        });
+      }
     }
   }
   return out;

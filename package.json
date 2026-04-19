@@ -14,12 +14,13 @@
   "scripts": {
     "start": "node bin/graphqlai.mjs",
     "graphqlai": "node bin/graphqlai.mjs",
-    "test": "npm run test:schema && npm run test:compile && npm run test:hypothesis && npm run test:planner && npm run test:principal",
+    "test": "npm run test:schema && npm run test:compile && npm run test:hypothesis && npm run test:planner && npm run test:principal && npm run test:stress",
     "test:schema": "node scripts/test-schema-loader.mjs",
     "test:compile": "node scripts/test-query-compiler.mjs",
     "test:hypothesis": "node scripts/test-hypothesis-engine.mjs",
     "test:planner": "node scripts/test-campaign-planner.mjs",
-    "test:principal": "node scripts/test-principal-replay.mjs"
+    "test:principal": "node scripts/test-principal-replay.mjs",
+    "test:stress": "node scripts/test-stress-probes.mjs"
   },
   "keywords": [
     "graphql",

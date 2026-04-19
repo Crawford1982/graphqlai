@@ -20,6 +20,7 @@ import { buildCampaignCases } from '../schema/hypothesisEngine.js';
 import { probeGraphqlEndpoint } from '../schema/surfaceProbe.js';
 import { hintsVerboseGraphqlErrors } from '../schema/leakHeuristics.js';
 import { buildMutationFollowUpCases, inferMutationToQueryEdges } from '../schema/campaignPlanner.js';
+import { buildBatchAliasCases, buildDepthLadderCases } from '../schema/stressProbes.js';
 
 function stripReplayBlob(r) {
   if (!r || typeof r !== 'object' || !('fullBody' in r)) return r;
@@ -74,6 +75,28 @@ export async function runCampaign(cfg) {
     const chainResults = await executeCases(chainCases, { ...transport, ...bodyRead, concurrency: cfg.concurrency });
     cases = [...cases, ...chainCases];
     execResults.push(...chainResults);
+  }
+
+  const batchCases = buildBatchAliasCases(
+    cases,
+    Math.max(0, Number(cfg.batchBudget || 0))
+  );
+  if (batchCases.length) {
+    const batchResults = await executeCases(batchCases, { ...transport, ...bodyRead, concurrency: cfg.concurrency });
+    cases = [...cases, ...batchCases];
+    execResults.push(...batchResults);
+  }
+
+  const depthCases = buildDepthLadderCases(
+    schema,
+    cfg.target,
+    Math.max(0, Number(cfg.depthBudget || 0)),
+    Math.max(2, Number(cfg.maxDepth || 5))
+  );
+  if (depthCases.length) {
+    const depthResults = await executeCases(depthCases, { ...transport, ...bodyRead, concurrency: cfg.concurrency });
+    cases = [...cases, ...depthCases];
+    execResults.push(...depthResults);
   }
 
   if (authAltHeaderNorm && Number(cfg.principalReplayBudget || 0) > 0) {
@@ -132,7 +155,7 @@ export async function runCampaign(cfg) {
   const ts = Date.now();
   const report = {
     tool: 'graphqlai',
-    toolVersion: '0.3.0',
+    toolVersion: cfg.toolVersion || '0.2.0',
     generatedAt: new Date(ts).toISOString(),
     target: cfg.target,
     mode: 'graphql_campaign_v2',
@@ -146,6 +169,9 @@ export async function runCampaign(cfg) {
       maxResponseBodyChars: previewCap,
       chainBudget: cfg.chainBudget ?? 0,
       principalReplayBudget: cfg.principalReplayBudget ?? 0,
+      batchBudget: cfg.batchBudget ?? 0,
+      depthBudget: cfg.depthBudget ?? 0,
+      maxDepth: cfg.maxDepth ?? 5,
     },
     checkerRegistry: GRAPHQLAI_CHECKERS,
     surfaceSummary: {

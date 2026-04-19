@@ -21,6 +21,11 @@ export function applyCiProfile(cfg) {
   cfg.timeoutMs = Math.min(Number(cfg.timeoutMs) || 5000, 8000);
   const mr = Number(cfg.maxRps);
   cfg.maxRps = !Number.isFinite(mr) || mr === 0 ? 12 : Math.min(mr, 20);
+  cfg.chainBudget = Math.min(Number(cfg.chainBudget) || 4, 8);
+  cfg.principalReplayBudget = Math.min(Number(cfg.principalReplayBudget) || 8, 12);
+  cfg.batchBudget = Math.min(Number(cfg.batchBudget) || 4, 8);
+  cfg.depthBudget = Math.min(Number(cfg.depthBudget) || 4, 8);
+  cfg.maxDepth = Math.min(Math.max(Number(cfg.maxDepth) || 4, 2), 6);
 }
 
 /**
