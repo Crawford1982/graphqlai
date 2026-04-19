@@ -1,0 +1,35 @@
+{
+  "name": "graphqlai",
+  "version": "0.2.0",
+  "private": false,
+  "description": "Schema-driven GraphQL security fuzzer — introspection ingest, bounded HTTP campaigns, replayable JSON reports",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "src/index.js",
+  "bin": {
+    "graphqlai": "./bin/graphqlai.mjs"
+  },
+  "scripts": {
+    "start": "node bin/graphqlai.mjs",
+    "graphqlai": "node bin/graphqlai.mjs",
+    "test": "npm run test:schema && npm run test:compile && npm run test:hypothesis && npm run test:planner && npm run test:principal",
+    "test:schema": "node scripts/test-schema-loader.mjs",
+    "test:compile": "node scripts/test-query-compiler.mjs",
+    "test:hypothesis": "node scripts/test-hypothesis-engine.mjs",
+    "test:planner": "node scripts/test-campaign-planner.mjs",
+    "test:principal": "node scripts/test-principal-replay.mjs"
+  },
+  "keywords": [
+    "graphql",
+    "security",
+    "fuzzing",
+    "introspection",
+    "api-testing"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
