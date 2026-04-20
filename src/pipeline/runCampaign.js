@@ -20,6 +20,7 @@ import { buildCampaignCases } from '../schema/hypothesisEngine.js';
 import { probeGraphqlEndpoint } from '../schema/surfaceProbe.js';
 import { hintsVerboseGraphqlErrors } from '../schema/leakHeuristics.js';
 import { buildMutationFollowUpCases, inferMutationToQueryEdges } from '../schema/campaignPlanner.js';
+import { buildHandleReplayCases } from '../schema/handleReplay.js';
 import { buildBatchAliasCases, buildDepthLadderCases } from '../schema/stressProbes.js';
 
 function stripReplayBlob(r) {
@@ -77,6 +78,15 @@ export async function runCampaign(cfg) {
     execResults.push(...chainResults);
   }
 
+  const appliedHandleBudget =
+    cfg.handleReplayBudget !== undefined ? Math.max(0, Number(cfg.handleReplayBudget)) : 24;
+  const handleCases = buildHandleReplayCases(execResults, schema, cfg.target, appliedHandleBudget);
+  if (handleCases.length) {
+    const handleResults = await executeCases(handleCases, { ...transport, ...bodyRead, concurrency: cfg.concurrency });
+    cases = [...cases, ...handleCases];
+    execResults.push(...handleResults);
+  }
+
   const batchCases = buildBatchAliasCases(
     cases,
     Math.max(0, Number(cfg.batchBudget || 0))
@@ -101,7 +111,12 @@ export async function runCampaign(cfg) {
 
   if (authAltHeaderNorm && Number(cfg.principalReplayBudget || 0) > 0) {
     const candidates = cases
-      .filter((c) => c.family === 'GRAPHQL_QUERY' || c.family === 'GRAPHQL_MUTATION')
+      .filter(
+        (c) =>
+          c.family === 'GRAPHQL_QUERY' ||
+          c.family === 'GRAPHQL_MUTATION' ||
+          c.family === 'GRAPHQL_HANDLE_REPLAY'
+      )
       .slice(0, Math.max(0, Number(cfg.principalReplayBudget || 0)))
       .map((c) => ({ ...c, id: `${c.id}:authAlt`, family: 'GRAPHQL_AUTH_ALT_REPLAY' }));
     if (candidates.length) {
@@ -168,6 +183,7 @@ export async function runCampaign(cfg) {
       scopePolicy: Boolean(cfg.scopePolicy),
       maxResponseBodyChars: previewCap,
       chainBudget: cfg.chainBudget ?? 0,
+      handleReplayBudget: appliedHandleBudget,
       principalReplayBudget: cfg.principalReplayBudget ?? 0,
       batchBudget: cfg.batchBudget ?? 0,
       depthBudget: cfg.depthBudget ?? 0,

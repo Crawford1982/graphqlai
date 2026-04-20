@@ -37,3 +37,20 @@ if (typeof obj.name !== 'string' || typeof obj.status !== 'string') {
   process.exit(1);
 }
 console.log('query compiler input object: ok');
+
+const chains = loadIntrospectionFromFile(path.join(here, '../fixtures/example-chains-introspection.json'));
+const projectOp = chains.operations.find((o) => o.kind === 'query' && o.fieldName === 'project');
+if (!projectOp) {
+  console.error('missing project op');
+  process.exit(1);
+}
+const projBody = compileOperationToRequestBody(chains, projectOp);
+if (!projBody.query.includes('project(') || !projBody.query.includes('$v0')) {
+  console.error(projBody.query);
+  process.exit(1);
+}
+if (!projBody.query.includes(' id') && !projBody.query.includes('\nid')) {
+  console.error('expected schema-aware scalar selection', projBody.query);
+  process.exit(1);
+}
+console.log('query compiler schema selection: ok');

@@ -27,4 +27,21 @@ if (!escalation.some((h) => h.checkerId === 'cross_principal_status_escalation')
   console.error('expected status escalation hit', escalation);
   process.exit(1);
 }
+
+const nestedDiff = checkCrossPrincipalOverlap([
+  {
+    caseId: 'z',
+    status: 200,
+    bodyPreview: '{"data":{"user":{"profile":{"role":"admin"}}}}',
+  },
+  {
+    caseId: 'z:authAlt',
+    status: 200,
+    bodyPreview: '{"data":{"user":{"profile":{"name":"x"}}}}',
+  },
+]);
+if (!nestedDiff.some((h) => h.checkerId === 'cross_principal_field_diff')) {
+  console.error('expected nested shape diff', nestedDiff);
+  process.exit(1);
+}
 console.log('principal replay checker: ok');

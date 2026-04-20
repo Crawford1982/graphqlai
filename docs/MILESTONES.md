@@ -28,6 +28,12 @@ Ship order stays **vertical slices with tests**. Each milestone must remain boun
   - 403->200 status escalation
   - top-level field-shape difference
 
+Recent builds (toward tier-1 payloads):
+
+- Schema-aware selection sets (`src/schema/selectionBuilder.js`): queries/mutations request scored scalars + bounded nested objects instead of only `__typename`.
+- Handle replay (`src/schema/handleReplay.js`, `--handle-replay-budget`): replay extracted IDs against queries with a single id-like argument.
+- Principal replay: nested `data` shape fingerprint (`graphqlDataShapeFingerprint` in `principalReplay.js`).
+
 ### M2 next hardening items
 
 - Better nested field-level diffs (not only top-level keys)

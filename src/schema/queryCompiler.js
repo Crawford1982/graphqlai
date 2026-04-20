@@ -2,6 +2,8 @@
  * Compiles validated operation shapes to GraphQL documents + variables.
  */
 
+import { buildOperationSelection, needsSubselection } from './selectionBuilder.js';
+
 function enumFirstValue(schema, typeName) {
   if (!typeName) return null;
   const def = schema.typesByName.get(typeName);
@@ -117,13 +119,6 @@ export function buildVariableBindings(schema, op, overrides = {}) {
   return { definitions: definitions.join(', '), variableNames, variables };
 }
 
-function needsSelection(schema, namedReturnType) {
-  if (!namedReturnType) return true;
-  const def = schema.typesByName.get(namedReturnType);
-  if (!def) return true;
-  return def.kind === 'OBJECT' || def.kind === 'INTERFACE' || def.kind === 'UNION';
-}
-
 export function compileOperationToRequestBody(schema, op, opts = {}) {
   const label = opts.opLabel?.replace(/[^a-zA-Z0-9_]/g, '_') || 'GraphqlaiProbe';
   const vb = buildVariableBindings(schema, op, opts.variableOverrides || {});
@@ -131,13 +126,27 @@ export function compileOperationToRequestBody(schema, op, opts = {}) {
     ? op.args.map((a, i) => `${a.name}: $${vb.variableNames[i]}`).join(', ')
     : '';
 
-  const call = !needsSelection(schema, op.returnNamedType)
-    ? op.args.length
-      ? `${op.fieldName}(${argsStr})`
-      : op.fieldName
-    : op.args.length
+  const wantsSel = needsSubselection(schema, op.returnNamedType);
+  const sel =
+    wantsSel &&
+    typeof opts.selection === 'object' &&
+    opts.selection !== null &&
+    /** @type {{ shallow?: boolean }} */ (opts.selection).shallow === true
+      ? '{\n    __typename\n  }'
+      : wantsSel
+        ? buildOperationSelection(schema, op, /** @type {{ maxDepth?: number, maxBreadth?: number }} */ (opts.selection || {}))
+        : '';
+
+  let call;
+  if (!wantsSel) {
+    call = op.args.length ? `${op.fieldName}(${argsStr})` : op.fieldName;
+  } else if (sel) {
+    call = op.args.length ? `${op.fieldName}(${argsStr}) ${sel}` : `${op.fieldName} ${sel}`;
+  } else {
+    call = op.args.length
       ? `${op.fieldName}(${argsStr}) {\n    __typename\n  }`
       : `${op.fieldName} {\n    __typename\n  }`;
+  }
 
   const root = op.kind === 'mutation' ? 'mutation' : 'query';
   const query = op.args.length

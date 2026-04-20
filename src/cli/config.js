@@ -7,6 +7,7 @@ export function parseArgv(argv) {
     authAlt: null,
     authAltEnv: null,
     principalReplayBudget: 12,
+    handleReplayBudget: 24,
     chainBudget: 8,
     batchBudget: 8,
     depthBudget: 8,
@@ -34,6 +35,7 @@ export function parseArgv(argv) {
     else if (a === '--auth-alt') args.authAlt = argv[++i];
     else if (a === '--auth-alt-env') args.authAltEnv = argv[++i];
     else if (a === '--principal-replay-budget') args.principalReplayBudget = Number(argv[++i]);
+    else if (a === '--handle-replay-budget') args.handleReplayBudget = Number(argv[++i]);
     else if (a === '--chain-budget') args.chainBudget = Number(argv[++i]);
     else if (a === '--batch-budget') args.batchBudget = Number(argv[++i]);
     else if (a === '--depth-budget') args.depthBudget = Number(argv[++i]);

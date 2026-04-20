@@ -39,7 +39,10 @@ export function buildDepthLadderCases(schema, endpointUrl, budget, maxDepth = 5)
   for (const qop of queries) {
     for (let d = 2; d <= maxDepth; d++) {
       if (out.length >= budget) return out;
-      const body = compileOperationToRequestBody(schema, qop, { opLabel: `depth_${qop.fieldName}_${d}` });
+      const body = compileOperationToRequestBody(schema, qop, {
+        opLabel: `depth_${qop.fieldName}_${d}`,
+        selection: { shallow: true },
+      });
       const deepQuery = deepenSelection(body.query, d);
       out.push({
         id: `gql:depth:${qop.fieldName}:${d}:${out.length}`,

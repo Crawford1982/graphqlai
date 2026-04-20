@@ -2,6 +2,33 @@ import { fingerprintBody } from './baseline.js';
 import { parseGraphqlEnvelope } from '../schema/leakHeuristics.js';
 
 /**
+ * Structural fingerprint for `data` payloads (nested keys + scalar kinds; stable sort).
+ *
+ * @param {unknown} value
+ * @param {number} [depth]
+ */
+export function graphqlDataShapeFingerprint(value, depth = 0) {
+  if (depth > 8) return '"maxdepth"';
+  if (value === null || value === undefined) return 'null';
+  const t = typeof value;
+  if (t === 'boolean') return 'bool';
+  if (t === 'number') return Number.isInteger(value) ? 'int' : 'float';
+  if (t === 'string') return 'str';
+  if (Array.isArray(value)) {
+    if (!value.length) return 'arr:0';
+    const inner = graphqlDataShapeFingerprint(value[0], depth + 1);
+    return `arr:${inner}`;
+  }
+  if (t === 'object') {
+    const o = /** @type {Record<string, unknown>} */ (value);
+    const keys = Object.keys(o).sort();
+    const parts = keys.map((k) => `"${k}":${graphqlDataShapeFingerprint(o[k], depth + 1)}`);
+    return `{${parts.join(',')}}`;
+  }
+  return 'unknown';
+}
+
+/**
  * Compare primary/alt responses for the same case lineage.
  */
 export function checkCrossPrincipalOverlap(execResults) {
@@ -57,17 +84,18 @@ export function checkCrossPrincipalOverlap(execResults) {
     }
 
     // Field-level diff: same status but different visible data shape.
-    const pd = parseGraphqlEnvelope(String(p.bodyPreview || '')).data || {};
-    const ad = parseGraphqlEnvelope(String(a.bodyPreview || '')).data || {};
-    const pkeys = JSON.stringify(Object.keys(pd).sort());
-    const akeys = JSON.stringify(Object.keys(ad).sort());
-    if (pkeys !== akeys) {
+    const pd = parseGraphqlEnvelope(String(p.bodyPreview || '')).data ?? {};
+    const ad = parseGraphqlEnvelope(String(a.bodyPreview || '')).data ?? {};
+    const pf = graphqlDataShapeFingerprint(pd);
+    const af = graphqlDataShapeFingerprint(ad);
+    if (pf !== af) {
       out.push({
         kind: 'checker',
         checkerId: 'cross_principal_field_diff',
         severity: 'medium',
-        title: 'GraphQL top-level data fields differ across principals',
-        detail: 'Primary and alternate responses expose different top-level GraphQL data fields.',
+        title: 'GraphQL response data shape differs across principals',
+        detail:
+          'Primary and alternate principals received different nested data shapes under `data` (keys and/or scalar kinds).',
         caseId: base,
         evidenceCaseIds: [String(p.caseId), String(a.caseId)],
       });
