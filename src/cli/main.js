@@ -47,6 +47,11 @@ export async function main() {
     outputDir: args.outputDir || 'output',
     maxRps: Number.isFinite(args.maxRps) ? args.maxRps : 0,
     maxResponseBodyChars: Number.isFinite(args.maxResponseBodyChars) ? args.maxResponseBodyChars : undefined,
+    maxPayloadVariants: Number.isFinite(args.maxPayloadVariants) ? args.maxPayloadVariants : 2,
+    variableStrategy:
+      args.variableStrategy === 'thorough' || args.variableStrategy === 'balanced'
+        ? args.variableStrategy
+        : 'balanced',
     handleReplayBudget: Number.isFinite(args.handleReplayBudget) ? args.handleReplayBudget : 24,
     chainBudget: Number.isFinite(args.chainBudget) ? args.chainBudget : 8,
     principalReplayBudget: Number.isFinite(args.principalReplayBudget) ? args.principalReplayBudget : 12,
@@ -86,6 +91,8 @@ export async function main() {
     scopePolicy,
     maxRps: /** @type {number} */ (cfg.maxRps),
     maxResponseBodyChars: /** @type {number|undefined} */ (cfg.maxResponseBodyChars),
+    maxPayloadVariants: /** @type {number} */ (cfg.maxPayloadVariants),
+    variableStrategy: /** @type {'balanced'|'thorough'} */ (cfg.variableStrategy),
     handleReplayBudget: /** @type {number} */ (cfg.handleReplayBudget),
     chainBudget: /** @type {number} */ (cfg.chainBudget),
     principalReplayBudget: /** @type {number} */ (cfg.principalReplayBudget),

@@ -14,6 +14,8 @@ export function parseArgv(argv) {
     maxDepth: 5,
     concurrency: 4,
     maxRequests: 120,
+    maxPayloadVariants: 2,
+    variableStrategy: 'balanced',
     timeoutMs: 8000,
     outputDir: 'output',
     scopeFile: null,
@@ -42,6 +44,8 @@ export function parseArgv(argv) {
     else if (a === '--max-depth') args.maxDepth = Number(argv[++i]);
     else if (a === '--concurrency' || a === '-c') args.concurrency = Number(argv[++i]);
     else if (a === '--max-requests') args.maxRequests = Number(argv[++i]);
+    else if (a === '--max-payload-variants') args.maxPayloadVariants = Number(argv[++i]);
+    else if (a === '--variable-strategy') args.variableStrategy = argv[++i];
     else if (a === '--timeout-ms') args.timeoutMs = Number(argv[++i]);
     else if (a === '--output-dir') args.outputDir = argv[++i];
     else if (a === '--scope-file') args.scopeFile = argv[++i];

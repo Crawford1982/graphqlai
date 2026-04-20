@@ -33,6 +33,7 @@ Recent builds (toward tier-1 payloads):
 - Schema-aware selection sets (`src/schema/selectionBuilder.js`): queries/mutations request scored scalars + bounded nested objects instead of only `__typename`.
 - Handle replay (`src/schema/handleReplay.js`, `--handle-replay-budget`): replay extracted IDs against queries with a single id-like argument.
 - Principal replay: nested `data` shape fingerprint (`graphqlDataShapeFingerprint` in `principalReplay.js`).
+- Smarter variable defaults (`src/schema/variableDefaults.js`): argument-name–aware strings/IDs (e.g. email, uuid), enum alternates, bounded **payload variants** per operation (`--max-payload-variants`, `--variable-strategy balanced|thorough`).
 
 ### M2 next hardening items
 

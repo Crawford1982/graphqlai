@@ -61,7 +61,13 @@ export async function runCampaign(cfg) {
   });
   log.push({ kind: 'surface_probed', probeCount: surface.probes.length, introspectionResponseLikely: surface.introspectionResponseLikely });
 
-  let cases = buildCampaignCases(schema, cfg.target, { maxRequests: Math.max(1, cfg.maxRequests || 120) });
+  let cases = buildCampaignCases(schema, cfg.target, {
+    maxRequests: Math.max(1, cfg.maxRequests || 120),
+    maxPayloadVariants:
+      cfg.maxPayloadVariants !== undefined ? Math.min(8, Math.max(1, Number(cfg.maxPayloadVariants))) : 2,
+    variableStrategy:
+      cfg.variableStrategy === 'thorough' ? 'thorough' : /** @type {'balanced'} */ ('balanced'),
+  });
   const execResults = await executeCases(cases, { ...transport, ...bodyRead, concurrency: cfg.concurrency });
   const casesById = new Map(cases.map((c) => [c.id, c]));
 
@@ -188,6 +194,10 @@ export async function runCampaign(cfg) {
       batchBudget: cfg.batchBudget ?? 0,
       depthBudget: cfg.depthBudget ?? 0,
       maxDepth: cfg.maxDepth ?? 5,
+      maxPayloadVariants:
+        cfg.maxPayloadVariants !== undefined ? Math.min(8, Math.max(1, Number(cfg.maxPayloadVariants))) : 2,
+      variableStrategy:
+        cfg.variableStrategy === 'thorough' ? 'thorough' : /** @type {'balanced'} */ ('balanced'),
     },
     checkerRegistry: GRAPHQLAI_CHECKERS,
     surfaceSummary: {

@@ -3,17 +3,7 @@
  */
 
 import { buildOperationSelection, needsSubselection } from './selectionBuilder.js';
-
-function enumFirstValue(schema, typeName) {
-  if (!typeName) return null;
-  const def = schema.typesByName.get(typeName);
-  if (!def || def.kind !== 'ENUM') return null;
-  const ev = /** @type {{ name?: string }[] | undefined} */ (
-    /** @type {Record<string, unknown>} */ (def).enumValues
-  );
-  if (!Array.isArray(ev) || !ev.length) return null;
-  return ev[0].name || null;
-}
+import { buildDefaultForTypeRef as buildDefaultTyped } from './variableDefaults.js';
 
 function typeRefToInputString(t) {
   if (!t) return 'String';
@@ -22,82 +12,17 @@ function typeRefToInputString(t) {
   return t.name || 'String';
 }
 
-function unwrapTypeRef(t) {
-  let cur = t;
-  while (cur && (cur.kind === 'NON_NULL' || cur.kind === 'LIST')) {
-    cur = cur.ofType;
-  }
-  return cur || null;
-}
+/**
+ * @typedef {import('./variableDefaults.js').VariableStrategy} VariableStrategy
+ */
 
-function isNonNull(t) {
-  return Boolean(t && t.kind === 'NON_NULL');
-}
-
-function listInnerRef(t) {
-  let cur = t;
-  while (cur && cur.kind === 'NON_NULL') cur = cur.ofType;
-  if (!cur || cur.kind !== 'LIST') return null;
-  let inner = cur.ofType;
-  while (inner && inner.kind === 'NON_NULL') inner = inner.ofType;
-  return inner || null;
-}
-
-function buildDefaultForTypeRef(schema, typeRef, depth = 0) {
-  if (!typeRef || depth > 4) return null;
-
-  const listInner = listInnerRef(typeRef);
-  if (listInner) {
-    return [buildDefaultForTypeRef(schema, listInner, depth + 1)];
-  }
-
-  const named = unwrapTypeRef(typeRef);
-  if (!named) return null;
-
-  if (named.kind === 'SCALAR') {
-    switch (named.name) {
-      case 'ID':
-        return '1';
-      case 'Int':
-        return 1;
-      case 'Float':
-        return 1.0;
-      case 'Boolean':
-        return false;
-      case 'String':
-      default:
-        return 'graphqlai';
-    }
-  }
-
-  if (named.kind === 'ENUM') {
-    return enumFirstValue(schema, named.name) || 'UNKNOWN';
-  }
-
-  if (named.kind === 'INPUT_OBJECT' && named.name) {
-    const def = schema.typesByName.get(named.name);
-    const fields = /** @type {Array<{ name: string, type: Record<string, unknown> }> | undefined} */ (
-      /** @type {Record<string, unknown>} */ (def || {}).inputFields
-    );
-    /** @type {Record<string, unknown>} */
-    const out = {};
-    if (!Array.isArray(fields)) return out;
-    for (const f of fields) {
-      const tr = /** @type {Record<string, unknown>} */ (f.type);
-      if (!isNonNull(tr) && depth > 0) continue;
-      out[f.name] = buildDefaultForTypeRef(
-        schema,
-        /** @type {Record<string, unknown>} */ (f.type),
-        depth + 1
-      );
-    }
-    return out;
-  }
-
-  return 'graphqlai';
-}
-
-export function buildVariableBindings(schema, op, overrides = {}) {
+/**
+ * @param {import('./introspectionLoader.js').IntrospectionSchema} schema
+ * @param {import('./introspectionLoader.js').SchemaOperation} op
+ * @param {Record<string, unknown>} overrides
+ * @param {VariableStrategy} [strategy]
+ */
+export function buildVariableBindings(schema, op, overrides = {}, strategy = 'balanced') {
   const definitions = [];
   /** @type {Record<string, unknown>} */
   const variables = {};
@@ -113,7 +38,13 @@ export function buildVariableBindings(schema, op, overrides = {}) {
       variables[vn] = overrides[a.name];
       continue;
     }
-    variables[vn] = buildDefaultForTypeRef(schema, a.typeRef, 0);
+    variables[vn] = buildDefaultTyped(
+      schema,
+      /** @type {Record<string, unknown>} */ (a.typeRef),
+      0,
+      { argName: a.name },
+      strategy
+    );
   }
 
   return { definitions: definitions.join(', '), variableNames, variables };
@@ -121,7 +52,11 @@ export function buildVariableBindings(schema, op, overrides = {}) {
 
 export function compileOperationToRequestBody(schema, op, opts = {}) {
   const label = opts.opLabel?.replace(/[^a-zA-Z0-9_]/g, '_') || 'GraphqlaiProbe';
-  const vb = buildVariableBindings(schema, op, opts.variableOverrides || {});
+  const strategy =
+    opts.variableStrategy === 'thorough'
+      ? 'thorough'
+      : /** @type {VariableStrategy} */ ('balanced');
+  const vb = buildVariableBindings(schema, op, opts.variableOverrides || {}, strategy);
   const argsStr = op.args.length
     ? op.args.map((a, i) => `${a.name}: $${vb.variableNames[i]}`).join(', ')
     : '';

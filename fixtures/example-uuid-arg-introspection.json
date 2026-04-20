@@ -1,0 +1,32 @@
+{
+  "data": {
+    "__schema": {
+      "queryType": { "name": "Query" },
+      "mutationType": null,
+      "types": [
+        {
+          "kind": "OBJECT",
+          "name": "Query",
+          "fields": [
+            {
+              "name": "nodeByUuid",
+              "args": [
+                {
+                  "name": "uuid",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": { "kind": "SCALAR", "name": "ID", "ofType": null }
+                  }
+                }
+              ],
+              "type": { "kind": "SCALAR", "name": "String", "ofType": null }
+            }
+          ]
+        },
+        { "kind": "SCALAR", "name": "ID" },
+        { "kind": "SCALAR", "name": "String" }
+      ]
+    }
+  }
+}

@@ -31,3 +31,15 @@ if (prioritized[0].family !== 'GRAPHQL_MUTATION') {
   process.exit(1);
 }
 console.log('hypothesis prioritization: ok');
+
+const inputSchema = loadIntrospectionFromFile(path.join(here, '../fixtures/example-input-object-introspection.json'));
+const multi = buildCampaignCases(inputSchema, 'https://example.com/graphql', {
+  maxRequests: 10,
+  maxPayloadVariants: 2,
+});
+const createCases = multi.filter((c) => c.id.startsWith('gql:mutation:createUser'));
+if (createCases.length !== 2 || !createCases.some((c) => c.id.includes(':pv1'))) {
+  console.error('expected two payload variants for createUser', createCases.map((c) => c.id));
+  process.exit(1);
+}
+console.log('hypothesis payload variants: ok');

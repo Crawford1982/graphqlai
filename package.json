@@ -14,9 +14,10 @@
   "scripts": {
     "start": "node bin/graphqlai.mjs",
     "graphqlai": "node bin/graphqlai.mjs",
-    "test": "npm run test:schema && npm run test:compile && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress",
+    "test": "npm run test:schema && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress",
     "test:schema": "node scripts/test-schema-loader.mjs",
     "test:compile": "node scripts/test-query-compiler.mjs",
+    "test:variable": "node scripts/test-variable-defaults.mjs",
     "test:hypothesis": "node scripts/test-hypothesis-engine.mjs",
     "test:planner": "node scripts/test-campaign-planner.mjs",
     "test:handle": "node scripts/test-handle-replay.mjs",

@@ -27,6 +27,7 @@ export function applyCiProfile(cfg) {
   cfg.batchBudget = Math.min(Number(cfg.batchBudget) || 4, 8);
   cfg.depthBudget = Math.min(Number(cfg.depthBudget) || 4, 8);
   cfg.maxDepth = Math.min(Math.max(Number(cfg.maxDepth) || 4, 2), 6);
+  cfg.maxPayloadVariants = Math.min(Math.max(Number(cfg.maxPayloadVariants) || 2, 1), 2);
 }
 
 /**

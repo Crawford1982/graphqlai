@@ -3,6 +3,7 @@
  */
 
 import { compileOperationToRequestBody } from './queryCompiler.js';
+import { expandVariableVariants } from './variableDefaults.js';
 
 /**
  * @typedef {import('../types.js').FuzzCase} FuzzCase
@@ -40,7 +41,11 @@ function scoreOperation(op) {
 /**
  * @param {IntrospectionSchema} schema
  * @param {string} endpointUrl
- * @param {{ maxRequests: number }} opts
+ * @param {{
+ *   maxRequests: number,
+ *   maxPayloadVariants?: number,
+ *   variableStrategy?: 'balanced' | 'thorough'
+ * }} opts
  * @returns {FuzzCase[]}
  */
 export function buildCampaignCases(schema, endpointUrl, opts) {
@@ -49,29 +54,54 @@ export function buildCampaignCases(schema, endpointUrl, opts) {
   const cap = () => cases.length >= opts.maxRequests;
   const prioritized = [...schema.operations].sort((a, b) => scoreOperation(b) - scoreOperation(a));
 
+  const maxVariants = Math.min(
+    Math.max(1, Number(opts.maxPayloadVariants ?? 2)),
+    8
+  );
+  const variableStrategy =
+    opts.variableStrategy === 'thorough' ? 'thorough' : /** @type {'balanced'} */ ('balanced');
+
   for (const op of prioritized) {
     if (cap()) break;
     try {
-      const body = compileOperationToRequestBody(schema, op, { opLabel: `${op.kind}_${op.fieldName}` });
-      const id = `gql:${op.kind}:${op.fieldName}`;
-      cases.push({
-        id,
-        method: 'POST',
-        url: endpointUrl,
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        family: op.kind === 'mutation' ? 'GRAPHQL_MUTATION' : 'GRAPHQL_QUERY',
-        meta: {
-          jsonBody: {
-            query: body.query,
-            variables: body.variables,
+      const variants =
+        maxVariants <= 1 || op.args.length === 0
+          ? [{}]
+          : expandVariableVariants(schema, op, {
+              maxVariants,
+              strategy: variableStrategy,
+            });
+
+      let vidx = 0;
+      for (const namedVars of variants) {
+        if (cap()) break;
+        const suffix = variants.length > 1 ? `:pv${vidx}` : '';
+        const body = compileOperationToRequestBody(schema, op, {
+          opLabel: `${op.kind}_${op.fieldName}${suffix}`,
+          variableOverrides: namedVars,
+          variableStrategy,
+        });
+        const id = `gql:${op.kind}:${op.fieldName}${suffix}`;
+        cases.push({
+          id,
+          method: 'POST',
+          url: endpointUrl,
+          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+          family: op.kind === 'mutation' ? 'GRAPHQL_MUTATION' : 'GRAPHQL_QUERY',
+          meta: {
+            jsonBody: {
+              query: body.query,
+              variables: body.variables,
+            },
+            contentType: 'application/json',
+            graphql: {
+              operationKind: op.kind,
+              fieldName: op.fieldName,
+            },
           },
-          contentType: 'application/json',
-          graphql: {
-            operationKind: op.kind,
-            fieldName: op.fieldName,
-          },
-        },
-      });
+        });
+        vidx += 1;
+      }
     } catch {
       /* skip malformed op */
     }
