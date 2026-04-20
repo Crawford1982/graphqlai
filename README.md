@@ -61,9 +61,15 @@ graphqlai -t ... -s ... --auth-env PRIMARY_TOKEN --auth-alt-env ALT_TOKEN --prin
 
 ### Milestone 2 options
 
+- `--handle-replay-budget <n>`: cap extra queries that reuse **IDs from successful `data` responses** against queries with one id-like argument (default `24`; `0` disables)
 - `--chain-budget <n>`: cap mutation->query follow-up requests (default `8`)
 - `--auth-alt` / `--auth-alt-env`: alternate principal
-- `--principal-replay-budget <n>`: how many query cases to replay as alt principal (default `12`)
+- `--principal-replay-budget <n>`: how many query/mutation/handle-replay cases to replay as alt principal (default `12`)
+
+**Variable payloads** (smarter defaults + bounded variants):
+
+- `--max-payload-variants <n>`: compile up to **n** distinct variable maps per operation (default `2`, max `8`; total rows still capped by `--max-requests`)
+- `--variable-strategy balanced|thorough`: larger enum slices and more input alternates when `thorough`
 
 ### Milestone 3 options
 
@@ -73,7 +79,7 @@ graphqlai -t ... -s ... --auth-env PRIMARY_TOKEN --auth-alt-env ALT_TOKEN --prin
 
 ### CI
 
-- **`--ci`** or **`GRAPHQLAI_CI=1`** — tightens concurrency, request caps, and default RPS.
+- **`--ci`** or **`GRAPHQLAI_CI=1`** — tightens concurrency, request caps, default RPS, and **`max-payload-variants`** (to `2`).
 - **`--ci-fail-on-findings`** — exit code **2** if `findings.length > 0`.
 - **`--ci-require-scope`** — refuses to run without **`--scope-file`**.
 
@@ -88,7 +94,7 @@ Reports are written under **`./output/`** (create with `--output-dir`):
 ```
 bin/graphqlai.mjs       # CLI entry
 src/cli/                # argv, CI, auth-by-env
-src/schema/             # introspection → operations; query compiler; hypotheses; chain planner
+src/schema/             # introspection → operations; query compiler; variableDefaults; selectionBuilder; hypotheses; chain/handle replay; stress probes
 src/pipeline/           # runCampaign (orchestration only)
 src/net/                # HTTP executor (sole outbound I/O)
 src/safety/             # scope policy + rate limit
