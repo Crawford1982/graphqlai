@@ -1,5 +1,7 @@
 # graphqlai
 
+[![CI](https://github.com/Crawford1982/graphqlai/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Crawford1982/graphqlai/actions/workflows/ci.yml?query=branch%3Amaster)
+
 **graphqlai** is a **GraphQL-only**, **schema-driven** HTTP tester: load **introspection JSON** **or SDL** (`*.graphql` / `*.graphqls` / `*.sdl`), compile **bounded POST** `application/json` operations, run them against a **single GraphQL endpoint URL**, and emit a **replayable JSON report** (`replayCurl` per row where possible). The intent is **surgical** coverage of GraphQL-shaped risk (replay, chains, batch/depth stress, envelope signals)—not breadth across arbitrary REST APIs.
 
 It is **not** a general REST scanner. This repository stays **graphqlai only** (no Mythos/other product naming).
@@ -171,6 +173,10 @@ validation/             # lab validation artifacts (DVGA runs, notes, summaries)
 3. **Compiled requests** — GraphQL documents are built through **`queryCompiler.js`**, not ad hoc string concatenation scattered across the tree.
 4. **Evidence-first** — every row gets a **`replayCurl`** when possible.
 5. **Authorized testing only** — use **`--scope-file`** on real programs.
+
+## Security
+
+Security policy (authorized use, reporting bugs **in graphqlai**): **`SECURITY.md`**.
 
 ## License
 

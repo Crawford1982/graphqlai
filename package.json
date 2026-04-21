@@ -39,6 +39,13 @@
     "api-testing"
   ],
   "license": "MIT",
+  "files": [
+    "bin",
+    "src",
+    "LICENSE",
+    "SECURITY.md",
+    "docs/REAL-TARGET-TESTING.md"
+  ],
   "dependencies": {
     "graphql": "^16.11.0",
     "js-yaml": "^4.1.0"

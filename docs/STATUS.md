@@ -1,6 +1,6 @@
 # graphqlai status and handoff
 
-Updated: 2026-04-22
+Updated: 2026-04-21
 
 ## Positioning
 
@@ -23,6 +23,8 @@ Updated: 2026-04-22
 - **Finding order** — `prioritizeFindingsForReport` promotes bounty + stress findings ahead of noisy heuristics (`src/verify/findingRank.js`)
 - **SDL schemas** — `.graphql` / `.graphqls` / `.sdl` accepted on `--schema` (`graphql` dependency)
 - **Stress personas** — offline JSON fixtures prove thresholds (`scripts/test-stress-personas.mjs`)
+- **npm publish tarball** — `package.json` **`files`** ships only `bin/`, `src/`, `LICENSE`, **`SECURITY.md`**, **`docs/REAL-TARGET-TESTING.md`** (no validation fixtures or lab JSON in the package)
+- **CI** — GitHub Actions runs **`npm ci`** + **`npm test`** on push/PR to **`master`** / **`main`** (Node **18 / 20 / 22**); workflow: **`.github/workflows/ci.yml`**
 
 ## Latest verification run
 
@@ -35,6 +37,7 @@ Updated: 2026-04-22
   - handle replay
   - principal replay checker (nested data shape diff)
   - stress probes + **stress anomalies** + **stress personas** + **finding rank**
+- **GitHub Actions** — same command sequence in CI (`.github/workflows/ci.yml`)
 
 ### Lab validation logging (DVGA)
 
