@@ -25,6 +25,7 @@ Updated: 2026-04-21
 - **Stress personas** — offline JSON fixtures prove thresholds (`scripts/test-stress-personas.mjs`)
 - **npm publish tarball** — `package.json` **`files`** ships only `bin/`, `src/`, `LICENSE`, **`SECURITY.md`**, **`docs/REAL-TARGET-TESTING.md`** (no validation fixtures or lab JSON in the package)
 - **CI** — GitHub Actions runs **`npm ci`** + **`npm test`** on push/PR to **`master`** / **`main`** (Node **18 / 20 / 22**); workflow: **`.github/workflows/ci.yml`**
+- **Bounty triage metadata** — each finding can include **`payoutCorrelationScore`**, **`bountyAxes`**, and short **typical program** copy; report includes **`bountyCorrelation`** summary (`src/verify/bountyCorrelation.js`, **`docs/BOUNTY-CORRELATION.md`**) — **heuristic prioritization only**
 
 ## Latest verification run
 

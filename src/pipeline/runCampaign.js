@@ -7,6 +7,7 @@ import { NoveltyIndex } from '../signals/noveltyIndex.js';
 import { triageResults } from '../verify/triage.js';
 import { analyzeStressProbeAnomalies } from '../verify/stressAnomalies.js';
 import { prioritizeFindingsForReport } from '../verify/findingRank.js';
+import { enrichFindingsWithBountyCorrelation, summarizeBountyCorrelation } from '../verify/bountyCorrelation.js';
 import { attachEvidenceCurls } from '../verify/evidencePack.js';
 import { buildTransportOpts } from '../safety/executorContext.js';
 import { buildBaselineFingerprints } from '../verify/baseline.js';
@@ -175,9 +176,12 @@ export async function runCampaign(cfg) {
     minimization: f.kind === 'bounty_signal' ? null : minimizationHint(casesMap.get(f.caseId)),
   }));
   findings = enrichFindingsWithStatistics(findings, execResults);
+  findings = enrichFindingsWithBountyCorrelation(findings);
   findings = prioritizeFindingsForReport(findings);
 
   const ts = Date.now();
+  const bountyCorrelationSummary = summarizeBountyCorrelation(findings);
+
   const report = {
     tool: 'graphqlai',
     toolVersion: cfg.toolVersion || '0.2.0',
@@ -209,6 +213,7 @@ export async function runCampaign(cfg) {
       statuses: surface.probes.map((p) => p.status),
       introspectionResponseLikely: surface.introspectionResponseLikely,
     },
+    bountyCorrelation: bountyCorrelationSummary,
     observationLog: log.snapshot(),
     dependencyGraph: { mutationToQueryEdges: edges },
     executed: execResults.length,

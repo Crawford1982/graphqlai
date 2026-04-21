@@ -38,6 +38,8 @@ Product stance (GraphQL-only, surgical scope): **`docs/POSITIONING.md`**
 
 **Authorized real targets:** **`docs/REAL-TARGET-TESTING.md`** — permission, `--scope-file`, schema, and rate limits.
 
+**Bounty triage (report fields):** **`docs/BOUNTY-CORRELATION.md`** — `payoutCorrelationScore`, axes, and how sorting uses them (heuristic only).
+
 Progress and handoff notes live in:
 
 - `docs/STATUS.md`

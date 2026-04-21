@@ -39,10 +39,14 @@ export function prioritizeFindingsForReport(findings) {
     i,
     p: findingReportPriority(/** @type {Record<string, unknown>} */ (f)),
     conf: Number(/** @type {{ confidence?: number }} */ (f).confidence ?? 0),
+    bounty: Number(
+      /** @type {{ payoutCorrelationScore?: number }} */ (f).payoutCorrelationScore ?? 0
+    ),
   }));
   scored.sort((a, b) => {
     if (a.p !== b.p) return a.p - b.p;
     if (b.conf !== a.conf) return b.conf - a.conf;
+    if (b.bounty !== a.bounty) return b.bounty - a.bounty;
     return a.i - b.i;
   });
   return scored.map((x) => x.f);
