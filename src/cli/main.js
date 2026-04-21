@@ -19,13 +19,26 @@ graphqlai — schema-driven GraphQL HTTP fuzzing (authorized targets only)
 Usage:
   graphqlai --target <graphql-endpoint-url> --schema <path>
   Schema path: introspection JSON (*.json) or SDL (*.graphql / *.graphqls / *.sdl)
+
+  graphqlai --version   (-V)   print tool and runtime fingerprint
 `);
+}
+
+function printVersion(p) {
+  console.log(`graphqlai ${p.version}`);
+  console.log(`node ${process.version} ${process.platform}-${process.arch}`);
+  console.log('Reports include a provenance block (tool version, Node, declared deps, optional git SHA).');
+  console.log('See docs/CONFIDENCE.md');
 }
 
 export async function main() {
   const args = parseArgv(process.argv);
   if (args.help) {
     printHelp();
+    process.exit(0);
+  }
+  if (args.version) {
+    printVersion(pkg);
     process.exit(0);
   }
   const ci = isCiMode(args);
@@ -101,6 +114,7 @@ export async function main() {
     depthBudget: /** @type {number} */ (cfg.depthBudget),
     maxDepth: /** @type {number} */ (cfg.maxDepth),
     toolVersion: pkg.version,
+    packageMeta: pkg,
   });
 
   console.log(`\nReport: ${outfile}`);

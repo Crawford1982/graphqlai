@@ -26,6 +26,7 @@ Updated: 2026-04-21
 - **npm publish tarball** — `package.json` **`files`** ships only `bin/`, `src/`, `LICENSE`, **`SECURITY.md`**, **`docs/REAL-TARGET-TESTING.md`** (no validation fixtures or lab JSON in the package)
 - **CI** — GitHub Actions runs **`npm ci`** + **`npm test`** on push/PR to **`master`** / **`main`** (Node **18 / 20 / 22**); workflow: **`.github/workflows/ci.yml`**
 - **Bounty triage metadata** — each finding can include **`payoutCorrelationScore`**, **`bountyAxes`**, and short **typical program** copy; report includes **`bountyCorrelation`** summary (`src/verify/bountyCorrelation.js`, **`docs/BOUNTY-CORRELATION.md`**) — **heuristic prioritization only**
+- **Report provenance + confidence doc** — JSON **`provenance`** block (`src/verify/runProvenance.js`: Node/OS, declared deps, optional **`gitSha`**, CI flag); rationale in **`docs/CONFIDENCE.md`**; **`graphqlai --version`** for quick fingerprinting
 
 ## Latest verification run
 

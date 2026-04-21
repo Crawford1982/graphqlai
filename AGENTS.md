@@ -24,4 +24,8 @@ Use this when extending the tool with AI-assisted editors.
 
 ## Tests
 
-`npm test` must stay **offline** (no live HTTP). Add fixtures under **`fixtures/`** and scripts under **`scripts/`**.
+`npm test` must stay **offline** (no live HTTP). Add fixtures under **`fixtures/`** and scripts under **`scripts/`**. **`npm run verify`** runs the full offline suite (same as **`npm test`**).
+
+## Reports
+
+Campaign JSON includes **`provenance`** (**`src/verify/runProvenance.js`**) when extending **`runCampaign`** — keep metadata accurate (versions, deps, optional git SHA) so disclosure packets stay auditable.

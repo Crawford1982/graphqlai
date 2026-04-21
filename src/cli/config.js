@@ -25,11 +25,13 @@ export function parseArgv(argv) {
     ciFailOnFindings: false,
     ciRequireScope: false,
     help: false,
+    version: false,
   };
 
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--help' || a === '-h') args.help = true;
+    else if (a === '--version' || a === '-V') args.version = true;
     else if (a === '--target' || a === '-t') args.target = argv[++i];
     else if (a === '--schema' || a === '-s') args.schemaPath = argv[++i];
     else if (a === '--auth' || a === '-a') args.auth = argv[++i];

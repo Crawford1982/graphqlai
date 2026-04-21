@@ -8,6 +8,7 @@ import { triageResults } from '../verify/triage.js';
 import { analyzeStressProbeAnomalies } from '../verify/stressAnomalies.js';
 import { prioritizeFindingsForReport } from '../verify/findingRank.js';
 import { enrichFindingsWithBountyCorrelation, summarizeBountyCorrelation } from '../verify/bountyCorrelation.js';
+import { buildReportProvenance } from '../verify/runProvenance.js';
 import { attachEvidenceCurls } from '../verify/evidencePack.js';
 import { buildTransportOpts } from '../safety/executorContext.js';
 import { buildBaselineFingerprints } from '../verify/baseline.js';
@@ -181,11 +182,17 @@ export async function runCampaign(cfg) {
 
   const ts = Date.now();
   const bountyCorrelationSummary = summarizeBountyCorrelation(findings);
+  const provenance = buildReportProvenance(
+    cfg.packageMeta && typeof cfg.packageMeta === 'object'
+      ? /** @type {Record<string, unknown>} */ (cfg.packageMeta)
+      : {}
+  );
 
   const report = {
     tool: 'graphqlai',
     toolVersion: cfg.toolVersion || '0.2.0',
     generatedAt: new Date(ts).toISOString(),
+    provenance,
     target: cfg.target,
     mode: 'graphql_campaign_v2',
     schemaPath: path.resolve(cfg.schemaPath),

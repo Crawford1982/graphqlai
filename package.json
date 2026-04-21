@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node bin/graphqlai.mjs",
     "graphqlai": "node bin/graphqlai.mjs",
-    "test": "npm run test:schema && npm run test:sdl && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress && npm run test:stress-anomalies && npm run test:stress-personas && npm run test:finding-rank && npm run test:bounty-correlation",
+    "test": "npm run test:schema && npm run test:sdl && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress && npm run test:stress-anomalies && npm run test:stress-personas && npm run test:finding-rank && npm run test:bounty-correlation && npm run test:provenance",
     "regression:summary": "node scripts/summarize-graphqlai-report.mjs",
     "regression:replay": "node scripts/replay-checklist-from-report.mjs",
     "regression:introspect": "node scripts/pull-introspection.mjs",
@@ -30,7 +30,9 @@
     "test:sdl": "node scripts/test-sdl-loader.mjs",
     "test:stress-personas": "node scripts/test-stress-personas.mjs",
     "test:finding-rank": "node scripts/test-finding-rank.mjs",
-    "test:bounty-correlation": "node scripts/test-bounty-correlation.mjs"
+    "test:bounty-correlation": "node scripts/test-bounty-correlation.mjs",
+    "test:provenance": "node scripts/test-run-provenance.mjs",
+    "verify": "npm test"
   },
   "keywords": [
     "graphql",
@@ -46,7 +48,8 @@
     "LICENSE",
     "SECURITY.md",
     "docs/REAL-TARGET-TESTING.md",
-    "docs/BOUNTY-CORRELATION.md"
+    "docs/BOUNTY-CORRELATION.md",
+    "docs/CONFIDENCE.md"
   ],
   "dependencies": {
     "graphql": "^16.11.0",

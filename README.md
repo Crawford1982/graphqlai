@@ -15,7 +15,7 @@ It is **not** a general REST scanner. This repository stays **graphqlai only** (
 ```bash
 cd graphqlai
 npm install
-npm test          # offline — no network
+npm test          # offline — no network (same as npm run verify)
 ```
 
 Global CLI (optional):
@@ -39,6 +39,8 @@ Product stance (GraphQL-only, surgical scope): **`docs/POSITIONING.md`**
 **Authorized real targets:** **`docs/REAL-TARGET-TESTING.md`** — permission, `--scope-file`, schema, and rate limits.
 
 **Bounty triage (report fields):** **`docs/BOUNTY-CORRELATION.md`** — `payoutCorrelationScore`, axes, and how sorting uses them (heuristic only).
+
+**Trust & verification:** **`docs/CONFIDENCE.md`** — offline test matrix, CI, single HTTP execution path, report **`provenance`**, and honest limits. **`graphqlai --version`** (`-V`) prints semver and runtime fingerprint.
 
 Progress and handoff notes live in:
 
