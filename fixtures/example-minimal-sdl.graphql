@@ -1,0 +1,5 @@
+# Minimal SDL for offline tests (same spirit as example-minimal-introspection.json)
+
+type Query {
+  hello: String
+}

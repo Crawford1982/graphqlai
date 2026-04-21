@@ -2,6 +2,10 @@
 
 Use this when extending the tool with AI-assisted editors.
 
+**Product scope:** graphqlai remains **GraphQL HTTP–only** (single endpoint, compiled POST JSON campaigns). Do not steer development toward REST crawlers or generic full-site scanners — see **`docs/POSITIONING.md`**.
+
+**Dependencies:** `graphql` is used only for **SDL → schema** (`buildSchema` / `introspectionFromSchema`) in `src/schema/introspectionLoader.js`. Do not add alternate GraphQL stacks for execution.
+
 ## Boundaries
 
 1. **`src/net/httpAgent.js`** is the only module that performs outbound HTTP (`fetch`). Do not add alternative HTTP stacks from planners or schema code.

@@ -1,8 +1,8 @@
 # graphqlai
 
-**graphqlai** is a focused **GraphQL HTTP security fuzzer**: load an **introspection snapshot**, compile **bounded POST** `application/json` operations, run them against a **single GraphQL endpoint URL**, and emit a **replayable JSON report** (curl snippets per row).
+**graphqlai** is a **GraphQL-only**, **schema-driven** HTTP tester: load **introspection JSON** **or SDL** (`*.graphql` / `*.graphqls` / `*.sdl`), compile **bounded POST** `application/json` operations, run them against a **single GraphQL endpoint URL**, and emit a **replayable JSON report** (`replayCurl` per row where possible). The intent is **surgical** coverage of GraphQL-shaped risk (replay, chains, batch/depth stress, envelope signals)—not breadth across arbitrary REST APIs.
 
-It is **not** a general REST scanner. It is **not** tied to any vendor “Mythos” product name—this repository is the **graphqlai** tool only.
+It is **not** a general REST scanner. This repository stays **graphqlai only** (no Mythos/other product naming).
 
 ## Requirements
 
@@ -26,11 +26,15 @@ graphqlai --help
 ## Usage
 
 **`--target`** must be the full HTTP(S) URL of the GraphQL endpoint (typically `POST` only).  
-**`--schema`** must point to a JSON file containing either a full GraphQL response with `data.__schema`, or a document with a root `__schema` object (saved introspection).
+**`--schema`** accepts introspection **JSON** (`data.__schema` or root `__schema`) **or** SDL (`.graphql` / `.graphqls` / `.sdl`).
 
 ```bash
 npx graphqlai --target "https://api.example.com/graphql" --schema ./path/to/introspection.json --scope-file ./scope.yaml --max-requests 64
 ```
+
+Product stance (GraphQL-only, surgical scope): **`docs/POSITIONING.md`**
+
+**Authorized real targets:** **`docs/REAL-TARGET-TESTING.md`** — permission, `--scope-file`, schema, and rate limits.
 
 Progress and handoff notes live in:
 
@@ -89,6 +93,59 @@ Reports are written under **`./output/`** (create with `--output-dir`):
 
 - `graphqlai-report-<timestamp>.json` — findings, `results[]` with **`replayCurl`**, raw execution rows.
 
+## Validation logging (DVGA lab runs)
+
+When fuzzing intentionally vulnerable targets (recommended before real programs), keep artifacts under **`validation/`** so results are reviewable later:
+
+- `validation/dvga/runs/<YYYYMMDD-HHmmss>/`
+  - `scope.yaml` — recommended allowlist (`allowHosts`, `pathPrefixes`)
+  - `introspection.json` — introspection snapshot used for that run (avoid UTF‑8 BOM on Windows when saving JSON)
+  - `graphqlai-report-*.json` — full tool output (findings + replay curls)
+  - `console.txt` — optional CLI transcript
+  - `run.md` — optional human notes for that run
+- `validation/dvga/notes/feedback-log.md` — qualitative notes (signal quality, false positives, misses)
+- `validation/dvga/knowledge/run-index.json` — compact machine-readable summaries across runs
+- `validation/dvga/knowledge/scenario-checklist.json` — DVGA themes → graphqlai artifacts (`results[].family`, example `caseId`s, manual verdict slots)
+
+Playbook + scenario mapping (how to triage DVGA-style runs): `docs/DVGA-VALIDATION.md`
+
+Pre-change regression checklist: `docs/REGRESSION.md`
+
+Separate skill — bounty report craft vs tool validation: `docs/PARALLEL-BOUNTY-TRADECRAFT.md`
+
+Stress threshold personas + live checklist: `docs/STRESS-THRESHOLD-VALIDATION.md`
+
+Summarize any saved report locally:
+
+```bash
+node scripts/summarize-graphqlai-report.mjs validation/dvga/runs/<run>/graphqlai-report-*.json
+```
+
+Replay representative curls from a report against a running DVGA (after `docker run …`):
+
+```bash
+node scripts/replay-checklist-from-report.mjs validation/dvga/runs/<run>/graphqlai-report-*.json
+```
+
+Pull introspection JSON from an endpoint (authorized only):
+
+```bash
+npm run regression:introspect -- https://api.example.com/graphql ./my-introspection.json
+```
+
+Manual schema file options when introspection is blocked on the wire: **`docs/M5-MANUAL-SEED.md`**.
+
+**Stress probes:** campaigns emit additional **`stress_anomaly`** findings when batch or depth probes show divergence vs baselines (see `src/verify/stressAnomalies.js`).
+
+### Are DVGA findings “expected”?
+
+**Often yes — and “many findings” does not automatically mean “many distinct bugs”.** DVGA is designed to exhibit noisy security-relevant behaviors (information disclosure previews, verbose errors, auth/JWT pitfalls, intentional DoS-ish responses, etc.). `graphqlai` reports **signals + evidence**, not final severity ratings; noisy targets will produce noisy rows until triage rules and budgets are tuned.
+
+### Dummy / baseline GraphQL targets
+
+- **Deterministic / offline behavior checks**: use the repo’s **`fixtures/*.json`** introspection snapshots with `npm test` (fully offline; best for regressions).
+- **Live behavior checks (not vulnerability truth)**: any stable public GraphQL endpoint can be used to confirm transport + introspection ingest + reporting, but it will not validate “security accuracy” unless you already know ground truth.
+
 ## Repository layout
 
 ```
@@ -104,14 +161,16 @@ src/signals/            # novelty index
 data/bounty-signals.json # deterministic regex signals on response previews
 fixtures/               # offline test introspection
 scripts/                  # offline tests (npm test)
+validation/             # lab validation artifacts (DVGA runs, notes, summaries)
 ```
 
 ## Principles
 
-1. **Executor owns HTTP** — planners / LLMs (future) never import the HTTP client here.
-2. **Compiled requests** — GraphQL documents are built through **`queryCompiler.js`**, not ad hoc string concatenation scattered across the tree.
-3. **Evidence-first** — every row gets a **`replayCurl`** when possible.
-4. **Authorized testing only** — use **`--scope-file`** on real programs.
+1. **GraphQL-first, bounded** — campaigns are capped (`--max-requests`, probe budgets); prefer **precision** over spraying unrelated HTTP surface.
+2. **Executor owns HTTP** — planners / LLMs (future) never import the HTTP client here.
+3. **Compiled requests** — GraphQL documents are built through **`queryCompiler.js`**, not ad hoc string concatenation scattered across the tree.
+4. **Evidence-first** — every row gets a **`replayCurl`** when possible.
+5. **Authorized testing only** — use **`--scope-file`** on real programs.
 
 ## License
 

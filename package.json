@@ -2,7 +2,7 @@
   "name": "graphqlai",
   "version": "0.2.0",
   "private": false,
-  "description": "Schema-driven GraphQL security fuzzer — introspection ingest, bounded HTTP campaigns, replayable JSON reports",
+  "description": "Schema-driven GraphQL security fuzzer — introspection or SDL ingest, bounded HTTP campaigns, replayable JSON reports",
   "type": "module",
   "engines": {
     "node": ">=18"
@@ -14,7 +14,10 @@
   "scripts": {
     "start": "node bin/graphqlai.mjs",
     "graphqlai": "node bin/graphqlai.mjs",
-    "test": "npm run test:schema && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress",
+    "test": "npm run test:schema && npm run test:sdl && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress && npm run test:stress-anomalies && npm run test:stress-personas && npm run test:finding-rank",
+    "regression:summary": "node scripts/summarize-graphqlai-report.mjs",
+    "regression:replay": "node scripts/replay-checklist-from-report.mjs",
+    "regression:introspect": "node scripts/pull-introspection.mjs",
     "test:schema": "node scripts/test-schema-loader.mjs",
     "test:compile": "node scripts/test-query-compiler.mjs",
     "test:variable": "node scripts/test-variable-defaults.mjs",
@@ -22,7 +25,11 @@
     "test:planner": "node scripts/test-campaign-planner.mjs",
     "test:handle": "node scripts/test-handle-replay.mjs",
     "test:principal": "node scripts/test-principal-replay.mjs",
-    "test:stress": "node scripts/test-stress-probes.mjs"
+    "test:stress": "node scripts/test-stress-probes.mjs",
+    "test:stress-anomalies": "node scripts/test-stress-anomalies.mjs",
+    "test:sdl": "node scripts/test-sdl-loader.mjs",
+    "test:stress-personas": "node scripts/test-stress-personas.mjs",
+    "test:finding-rank": "node scripts/test-finding-rank.mjs"
   },
   "keywords": [
     "graphql",
@@ -33,6 +40,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "graphql": "^16.11.0",
     "js-yaml": "^4.1.0"
   }
 }

@@ -3,3 +3,6 @@ output/
 .env
 *.log
 .DS_Store
+
+# Local DVGA / lab targets (clone separately; do not vendor full apps)
+validation/dvga/targets/

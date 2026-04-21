@@ -24,6 +24,11 @@ export function scoreFinding(finding, rawResult, baselines) {
 
   let score = 0.35;
 
+  if (finding.kind === 'stress_anomaly') {
+    score += 0.08;
+    signals.push('stress_probe_anomaly');
+  }
+
   if (finding.severity === 'high') {
     score += 0.15;
     signals.push('heuristic_high_severity');

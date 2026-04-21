@@ -1,6 +1,6 @@
 # graphqlai milestones
 
-Ship order stays **vertical slices with tests**. Each milestone must remain bounded, replayable, and CI-safe.
+Ship order stays **vertical slices with tests**. Each milestone must remain bounded, replayable, and CI-safe. Scope stays **GraphQL HTTP** (`application/json` to a single endpoint URL); milestones aim for **precision** on GraphQL bug classes, not REST coverage — see **`docs/POSITIONING.md`**.
 
 ## Status summary
 
@@ -49,7 +49,7 @@ Recent builds (toward tier-1 payloads):
 ### M3 next hardening items
 
 - Replace synthetic depth aliases with schema-aware nested selections
-- Add dedicated anomaly scoring for batch/depth results (latency, error shape, partial-data anomalies)
+- **Done (initial):** dedicated **`stress_anomaly`** findings from batch/depth execution rows (`src/verify/stressAnomalies.js`) — multi-error batch arrays, batch vs single divergence, depth-ladder latency ramps
 - Add targeted M3 checkers (batch amplification and depth-complexity behavior)
 - Expand batch probe generation (higher multiplicity, multi-ID enumeration, mixed operation patterns)
 
@@ -59,10 +59,11 @@ Recent builds (toward tier-1 payloads):
 - Typed plan JSON validated by compiler before execution
 - Prompt inputs stay metadata/summaries only (no sensitive raw payloads)
 
-## Milestone 5 (planned) - ingest without introspection
+## Milestone 5 (planned) — introspection-disabled / offline schema workflows
 
-- SDL ingest
-- Manual seed operation files for introspection-disabled targets
+- **SDL on disk:** **`--schema path/to/schema.graphql`** (`buildSchema` → introspection-shaped model in `src/schema/introspectionLoader.js`)
+- Save introspection JSON via `scripts/pull-introspection.mjs` or external exports — **`docs/M5-MANUAL-SEED.md`**
+- Advanced: stitched federation / incremental SDL merges — **not goals** unless scoped explicitly
 
 ## Additional quality track (from external review feedback)
 
@@ -72,6 +73,7 @@ Recent builds (toward tier-1 payloads):
 
 ## Non-goals (until core is solid)
 
+- General-purpose REST/HTML crawling or OpenAPI scanners (explicitly out of scope for this repo)
 - Subscriptions/WebSocket fuzzing
 - Federation-wide orchestration
 - GUI-first workflows (CLI + JSON report remain source of truth)

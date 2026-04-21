@@ -1,0 +1,3063 @@
+{
+  "tool": "graphqlai",
+  "toolVersion": "0.2.0",
+  "generatedAt": "2026-04-21T15:47:17.098Z",
+  "target": "http://127.0.0.1:5014/graphql",
+  "mode": "graphql_campaign_v2",
+  "schemaPath": "C:\\Users\\Marshalls\\Desktop\\graphqlai\\validation\\dvga\\runs\\20260421-154533\\introspection.json",
+  "limits": {
+    "maxRequests": 200,
+    "concurrency": 4,
+    "timeoutMs": 8000,
+    "maxRps": 0,
+    "scopePolicy": true,
+    "maxResponseBodyChars": 8192,
+    "chainBudget": 8,
+    "handleReplayBudget": 24,
+    "principalReplayBudget": 12,
+    "batchBudget": 8,
+    "depthBudget": 8,
+    "maxDepth": 5,
+    "maxPayloadVariants": 2,
+    "variableStrategy": "balanced"
+  },
+  "checkerRegistry": [
+    {
+      "checkerId": "cross_principal_same_body",
+      "title": "Same body across principals",
+      "precondition": "Primary and alternate auth replay both return 200 with same body fingerprint",
+      "owaspMapping": [
+        "API1:2023",
+        "API5:2023"
+      ],
+      "bountyTierHint": "high"
+    },
+    {
+      "checkerId": "cross_principal_field_diff",
+      "title": "Field-level response differs across principals",
+      "precondition": "Planned",
+      "owaspMapping": [
+        "API1:2023",
+        "API5:2023"
+      ],
+      "bountyTierHint": "high"
+    },
+    {
+      "checkerId": "cross_principal_status_escalation",
+      "title": "Status pattern indicates privilege escalation",
+      "precondition": "Primary gets 403 while alternate gets 200 on same request lineage",
+      "owaspMapping": [
+        "API1:2023",
+        "API5:2023"
+      ],
+      "bountyTierHint": "high"
+    }
+  ],
+  "surfaceSummary": {
+    "graphqlProbes": 2,
+    "statuses": [
+      200,
+      200
+    ],
+    "introspectionResponseLikely": true
+  },
+  "observationLog": {
+    "entryCount": 2,
+    "kinds": [
+      "introspection_loaded",
+      "surface_probed"
+    ]
+  },
+  "dependencyGraph": {
+    "mutationToQueryEdges": [
+      {
+        "mutationField": "createPaste",
+        "queryField": "paste",
+        "argName": "id"
+      },
+      {
+        "mutationField": "createPaste",
+        "queryField": "users",
+        "argName": "id"
+      },
+      {
+        "mutationField": "createPaste",
+        "queryField": "readAndBurn",
+        "argName": "id"
+      },
+      {
+        "mutationField": "editPaste",
+        "queryField": "paste",
+        "argName": "id"
+      },
+      {
+        "mutationField": "editPaste",
+        "queryField": "users",
+        "argName": "id"
+      },
+      {
+        "mutationField": "editPaste",
+        "queryField": "readAndBurn",
+        "argName": "id"
+      },
+      {
+        "mutationField": "deletePaste",
+        "queryField": "paste",
+        "argName": "id"
+      },
+      {
+        "mutationField": "deletePaste",
+        "queryField": "users",
+        "argName": "id"
+      },
+      {
+        "mutationField": "deletePaste",
+        "queryField": "readAndBurn",
+        "argName": "id"
+      },
+      {
+        "mutationField": "uploadPaste",
+        "queryField": "paste",
+        "argName": "id"
+      },
+      {
+        "mutationField": "uploadPaste",
+        "queryField": "users",
+        "argName": "id"
+      },
+      {
+        "mutationField": "uploadPaste",
+        "queryField": "readAndBurn",
+        "argName": "id"
+      },
+      {
+        "mutationField": "importPaste",
+        "queryField": "paste",
+        "argName": "id"
+      },
+      {
+        "mutationField": "importPaste",
+        "queryField": "users",
+        "argName": "id"
+      },
+      {
+        "mutationField": "importPaste",
+        "queryField": "readAndBurn",
+        "argName": "id"
+      },
+      {
+        "mutationField": "createUser",
+        "queryField": "paste",
+        "argName": "id"
+      },
+      {
+        "mutationField": "createUser",
+        "queryField": "users",
+        "argName": "id"
+      },
+      {
+        "mutationField": "createUser",
+        "queryField": "readAndBurn",
+        "argName": "id"
+      },
+      {
+        "mutationField": "login",
+        "queryField": "paste",
+        "argName": "id"
+      },
+      {
+        "mutationField": "login",
+        "queryField": "users",
+        "argName": "id"
+      },
+      {
+        "mutationField": "login",
+        "queryField": "readAndBurn",
+        "argName": "id"
+      }
+    ]
+  },
+  "executed": 73,
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:mutation:createUser:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "createUser",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:mutation:createUser:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "createUser",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:query:users:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:query:users:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:systemUpdate",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "systemUpdate",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:paste:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "paste",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:paste:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "paste",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:readAndBurn:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "readAndBurn",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:readAndBurn:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "readAndBurn",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:pastes:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "pastes",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:pastes:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "pastes",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:systemDiagnostics:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "systemDiagnostics",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:systemDiagnostics:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "systemDiagnostics",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:systemDebug:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "systemDebug",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:systemDebug:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "systemDebug",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:systemHealth",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "systemHealth",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:search:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "search",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:search:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "search",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:audits",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "audits",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:me:pv0",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "me",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:mutation:createUser:pv1:chain:users:1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:mutation:createPaste:pv0:chain:users:6",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:handle:users:1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:handle:users:6",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:handle:users:13",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:users:pv0:batch",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "high",
+      "title": "Sensitive pattern in body preview",
+      "detail": "Heuristic match in response text (redact before sharing)",
+      "caseId": "gql:query:users:pv1:batch",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "users",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:systemUpdate:batch",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "systemUpdate",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:paste:pv1:batch",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "paste",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:readAndBurn:pv0:batch",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "readAndBurn",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "severity": "info",
+      "title": "Transport/timeout",
+      "detail": "This operation was aborted",
+      "caseId": "gql:query:readAndBurn:pv1:batch",
+      "url": "http://127.0.0.1:5014/graphql",
+      "confidence": 0.35,
+      "signals": [],
+      "minimization": {
+        "kind": "graphql_operation",
+        "fieldName": "readAndBurn",
+        "note": "Narrow to a single field/operation and adjust selection set or variables"
+      },
+      "statistics": {
+        "note": "no_route_or_error"
+      }
+    },
+    {
+      "kind": "bounty_signal",
+      "signalId": "jwt_or_bearer_leak",
+      "severity": "high",
+      "title": "Looks like bearer/JWT material in body",
+      "detail": "Matched signal \"jwt_or_bearer_leak\" on response preview.",
+      "caseId": "gql:mutation:login:pv1",
+      "url": "http://127.0.0.1:5014/graphql",
+      "referenceUrl": "https://owasp.org/API-Security/editions/2023/en/0xa2-broken-authentication/",
+      "checkerId": "signal:jwt_or_bearer_leak",
+      "owaspMapping": [],
+      "bountyTierHint": "high",
+      "evidenceHarPath": null,
+      "confidence": 0.5,
+      "signals": [
+        "heuristic_high_severity"
+      ],
+      "minimization": null,
+      "statistics": {
+        "routeKey": "POST:/graphql",
+        "routeSamples": 52,
+        "routeFiveXXCount": 0,
+        "routeFiveXXRate": 0,
+        "baselineFiveXXPrior": 0.02,
+        "baselineNote": "default_prior",
+        "binomialExcessP": null
+      }
+    }
+  ],
+  "results": [
+    {
+      "caseId": "gql:mutation:createUser:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 56,
+      "headers": {
+        "content-length": "370",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"errors\":[{\"message\":\"(sqlite3.IntegrityError) UNIQUE constraint failed: users.username\\n[SQL: INSERT INTO users (username, email, password) VALUES (?, ?, ?)]\\n[parameters: ('admin', 'user@example.test', 'test-token')]\\n(Background on this error at: https://sqlalche.me/e/14/gkpj)\",\"locations\":[{\"line\":2,\"column\":3}],\"path\":[\"createUser\"]}],\"data\":{\"createUser\":null}}",
+      "bodyBytes": 370,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_createUser_pv0($v0: UserInput!) {\\n  createUser(userData: $v0) {\\n    user {\\n        id\\n            username\\n            password\\n      }\\n  }\\n}\",\"variables\":{\"v0\":{\"username\":\"admin\",\"email\":\"user@example.test\",\"password\":\"test-token\"}}}'"
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 281,
+      "headers": {
+        "content-length": "81",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"createUser\":{\"user\":{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}}}}",
+      "bodyBytes": 81,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_createUser_pv1($v0: UserInput!) {\\n  createUser(userData: $v0) {\\n    user {\\n        id\\n            username\\n            password\\n      }\\n  }\\n}\",\"variables\":{\"v0\":{\"username\":\"root\",\"email\":\"user@example.test\",\"password\":\"test-token\"}}}'"
+    },
+    {
+      "caseId": "gql:mutation:deletePaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 134,
+      "headers": {
+        "content-length": "40",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"deletePaste\":{\"result\":true}}}",
+      "bodyBytes": 40,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_deletePaste_pv0($v0: Int) {\\n  deletePaste(id: $v0) {\\n    result\\n  }\\n}\",\"variables\":{\"v0\":1}}'"
+    },
+    {
+      "caseId": "gql:mutation:deletePaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 84,
+      "headers": {
+        "content-length": "41",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"deletePaste\":{\"result\":false}}}",
+      "bodyBytes": 41,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_deletePaste_pv1($v0: Int) {\\n  deletePaste(id: $v0) {\\n    result\\n  }\\n}\",\"variables\":{\"v0\":0}}'"
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 556,
+      "headers": {
+        "content-length": "401",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"createPaste\":{\"paste\":{\"id\":\"14\",\"ownerId\":1,\"userAgent\":\"node\",\"title\":\"graphqlai\",\"owner\":{\"id\":\"1\",\"name\":\"DVGAUser\",\"paste\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}],\"pastes\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}]},\"content\":\"graphqlai\",\"public\":false,\"ipAddr\":\"172.17.0.1\",\"burn\":false}}}}",
+      "bodyBytes": 401,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_createPaste_pv0($v0: Boolean, $v1: String, $v2: Boolean, $v3: String) {\\n  createPaste(burn: $v0, content: $v1, public: $v2, title: $v3) {\\n    paste {\\n        id\\n            ownerId\\n            userAgent\\n            title\\n            owner {\\n            id\\n                name\\n                paste {\\n                __typename\\n              }\\n                pastes {\\n                __typename\\n              }\\n          }\\n            content\\n            public\\n            ipAddr\\n            burn\\n      }\\n  }\\n}\",\"variables\":{\"v0\":false,\"v1\":\"graphqlai\",\"v2\":false,\"v3\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 411,
+      "headers": {
+        "content-length": "342",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"createPaste\":{\"paste\":{\"id\":\"13\",\"ownerId\":1,\"userAgent\":\"node\",\"title\":\"graphqlai\",\"owner\":{\"id\":\"1\",\"name\":\"DVGAUser\",\"paste\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}],\"pastes\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}]},\"content\":\"graphqlai\",\"public\":false,\"ipAddr\":\"172.17.0.1\",\"burn\":true}}}}",
+      "bodyBytes": 342,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_createPaste_pv1($v0: Boolean, $v1: String, $v2: Boolean, $v3: String) {\\n  createPaste(burn: $v0, content: $v1, public: $v2, title: $v3) {\\n    paste {\\n        id\\n            ownerId\\n            userAgent\\n            title\\n            owner {\\n            id\\n                name\\n                paste {\\n                __typename\\n              }\\n                pastes {\\n                __typename\\n              }\\n          }\\n            content\\n            public\\n            ipAddr\\n            burn\\n      }\\n  }\\n}\",\"variables\":{\"v0\":true,\"v1\":\"graphqlai\",\"v2\":false,\"v3\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:editPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 194,
+      "headers": {
+        "content-length": "37",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"editPaste\":{\"paste\":null}}}",
+      "bodyBytes": 37,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_editPaste_pv0($v0: String, $v1: Int, $v2: String) {\\n  editPaste(content: $v0, id: $v1, title: $v2) {\\n    paste {\\n        id\\n            ownerId\\n            userAgent\\n            title\\n            owner {\\n            id\\n                name\\n                paste {\\n                __typename\\n              }\\n                pastes {\\n                __typename\\n              }\\n          }\\n            content\\n            public\\n            ipAddr\\n            burn\\n      }\\n  }\\n}\",\"variables\":{\"v0\":\"graphqlai\",\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:editPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 403,
+      "headers": {
+        "content-length": "37",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"editPaste\":{\"paste\":null}}}",
+      "bodyBytes": 37,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_editPaste_pv1($v0: String, $v1: Int, $v2: String) {\\n  editPaste(content: $v0, id: $v1, title: $v2) {\\n    paste {\\n        id\\n            ownerId\\n            userAgent\\n            title\\n            owner {\\n            id\\n                name\\n                paste {\\n                __typename\\n              }\\n                pastes {\\n                __typename\\n              }\\n          }\\n            content\\n            public\\n            ipAddr\\n            burn\\n      }\\n  }\\n}\",\"variables\":{\"v0\":\"test\",\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:uploadPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 322,
+      "headers": {
+        "content-length": "78",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"uploadPaste\":{\"filename\":null,\"content\":null,\"result\":\"graphqlai\"}}}",
+      "bodyBytes": 78,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_uploadPaste_pv0($v0: String!, $v1: String!) {\\n  uploadPaste(content: $v0, filename: $v1) {\\n    filename\\n        content\\n        result\\n  }\\n}\",\"variables\":{\"v0\":\"graphqlai\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:uploadPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 230,
+      "headers": {
+        "content-length": "73",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"uploadPaste\":{\"filename\":null,\"content\":null,\"result\":\"test\"}}}",
+      "bodyBytes": 73,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_uploadPaste_pv1($v0: String!, $v1: String!) {\\n  uploadPaste(content: $v0, filename: $v1) {\\n    filename\\n        content\\n        result\\n  }\\n}\",\"variables\":{\"v0\":\"test\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:importPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 386,
+      "headers": {
+        "content-length": "38",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"importPaste\":{\"result\":\"\"}}}",
+      "bodyBytes": 38,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_importPaste_pv0($v0: String!, $v1: String!, $v2: Int, $v3: String!) {\\n  importPaste(host: $v0, path: $v1, port: $v2, scheme: $v3) {\\n    result\\n  }\\n}\",\"variables\":{\"v0\":\"graphqlai\",\"v1\":\"graphqlai\",\"v2\":1,\"v3\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:importPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 289,
+      "headers": {
+        "content-length": "38",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"importPaste\":{\"result\":\"\"}}}",
+      "bodyBytes": 38,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_importPaste_pv1($v0: String!, $v1: String!, $v2: Int, $v3: String!) {\\n  importPaste(host: $v0, path: $v1, port: $v2, scheme: $v3) {\\n    result\\n  }\\n}\",\"variables\":{\"v0\":\"test\",\"v1\":\"graphqlai\",\"v2\":1,\"v3\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:login:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 395,
+      "headers": {
+        "content-length": "124",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"errors\":[{\"message\":\"Authentication Failure\",\"locations\":[{\"line\":2,\"column\":3}],\"path\":[\"login\"]}],\"data\":{\"login\":null}}",
+      "bodyBytes": 124,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_login_pv0($v0: String, $v1: String) {\\n  login(password: $v0, username: $v1) {\\n    accessToken\\n        refreshToken\\n  }\\n}\",\"variables\":{\"v0\":\"test-token\",\"v1\":\"admin\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:login:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 430,
+      "headers": {
+        "content-length": "571",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"login\":{\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc2Nzg2MzgyLCJuYmYiOjE3NzY3ODYzODIsImp0aSI6IjEzYjg2ZDZhLTFjODQtNGY5OS1iMDgxLTYxMDQwN2I2MTVlOSIsImlkZW50aXR5IjoiYWRtaW4iLCJleHAiOjE3NzY3OTM1ODJ9.zqqK8-tT5P-HZed2C7ODgUCDP1A0IWD7iSpwhdCKp0c\",\"refreshToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTc3Njc4NjM4MiwibmJmIjoxNzc2Nzg2MzgyLCJqdGkiOiJlZjVjNjJlNi1kMDBhLTRiNjctODk0ZS1kODEwZjdmNzI2NWMiLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNzc5Mzc4MzgyfQ.03YvFq5EEL2yu0x9BW4oT8GPYsJ4EQUFW1K6nThb0yE\"}}}",
+      "bodyBytes": 571,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"mutation mutation_login_pv1($v0: String, $v1: String) {\\n  login(password: $v0, username: $v1) {\\n    accessToken\\n        refreshToken\\n  }\\n}\",\"variables\":{\"v0\":\"changeme\",\"v1\":\"admin\"}}'"
+    },
+    {
+      "caseId": "gql:query:users:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 154,
+      "headers": {
+        "content-length": "70",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"}]}}",
+      "bodyBytes": 70,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_users_pv0($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":1}}'"
+    },
+    {
+      "caseId": "gql:query:users:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 267,
+      "headers": {
+        "content-length": "172",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"},{\"id\":\"2\",\"username\":\"operator\",\"password\":\"******\"},{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}]}}",
+      "bodyBytes": 172,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_users_pv1($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":0}}'"
+    },
+    {
+      "caseId": "gql:query:systemUpdate",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8023,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_systemUpdate {\\n  systemUpdate\\n}\",\"variables\":{}}'"
+    },
+    {
+      "caseId": "gql:query:deleteAllPastes",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 280,
+      "headers": {
+        "content-length": "33",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"deleteAllPastes\":true}}",
+      "bodyBytes": 33,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_deleteAllPastes {\\n  deleteAllPastes\\n}\",\"variables\":{}}'"
+    },
+    {
+      "caseId": "gql:query:paste:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8002,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_paste_pv0($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":1,\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:paste:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_paste_pv1($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":0,\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_readAndBurn_pv0($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":1}}'"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_readAndBurn_pv1($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":0}}'"
+    },
+    {
+      "caseId": "gql:query:pastes:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8009,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_pastes_pv0($v0: Boolean, $v1: Int, $v2: String) {\\n  pastes(public: $v0, limit: $v1, filter: $v2) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":false,\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:pastes:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8022,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_pastes_pv1($v0: Boolean, $v1: Int, $v2: String) {\\n  pastes(public: $v0, limit: $v1, filter: $v2) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":true,\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:systemDiagnostics:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8013,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_systemDiagnostics_pv0($v0: String, $v1: String, $v2: String) {\\n  systemDiagnostics(username: $v0, password: $v1, cmd: $v2)\\n}\",\"variables\":{\"v0\":\"admin\",\"v1\":\"test-token\",\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:systemDiagnostics:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8007,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_systemDiagnostics_pv1($v0: String, $v1: String, $v2: String) {\\n  systemDiagnostics(username: $v0, password: $v1, cmd: $v2)\\n}\",\"variables\":{\"v0\":\"root\",\"v1\":\"test-token\",\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:systemDebug:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8009,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_systemDebug_pv0($v0: String) {\\n  systemDebug(arg: $v0)\\n}\",\"variables\":{\"v0\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:systemDebug:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8012,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_systemDebug_pv1($v0: String) {\\n  systemDebug(arg: $v0)\\n}\",\"variables\":{\"v0\":\"test\"}}'"
+    },
+    {
+      "caseId": "gql:query:systemHealth",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8008,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_systemHealth {\\n  systemHealth\\n}\",\"variables\":{}}'"
+    },
+    {
+      "caseId": "gql:query:search:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8002,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_search_pv0($v0: String) {\\n  search(keyword: $v0) {\\n    __typename\\n  }\\n}\",\"variables\":{\"v0\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:query:search:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8014,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_search_pv1($v0: String) {\\n  search(keyword: $v0) {\\n    __typename\\n  }\\n}\",\"variables\":{\"v0\":\"test\"}}'"
+    },
+    {
+      "caseId": "gql:query:audits",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8013,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_audits {\\n  audits {\\n    id\\n        gqloperation\\n        gqlquery\\n        timestamp\\n  }\\n}\",\"variables\":{}}'"
+    },
+    {
+      "caseId": "gql:query:me:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_me_pv0($v0: String) {\\n  me(token: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"test-token\"}}'"
+    },
+    {
+      "caseId": "gql:query:me:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 1121,
+      "headers": {
+        "content-length": "115",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"errors\":[{\"message\":\"Not enough segments\",\"locations\":[{\"line\":2,\"column\":3}],\"path\":[\"me\"]}],\"data\":{\"me\":null}}",
+      "bodyBytes": 115,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query query_me_pv1($v0: String) {\\n  me(token: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"changeme\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1:chain:paste:0",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 33,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createUser_to_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"3\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1:chain:users:1",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 107,
+      "headers": {
+        "content-length": "69",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}]}}",
+      "bodyBytes": 69,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createUser_to_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"3\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1:chain:readAndBurn:2",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 57,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createUser_to_readAndBurn($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"3\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:paste:3",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 84,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createPaste_to_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"14\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:paste:4",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 123,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createPaste_to_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"1\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:users:5",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 119,
+      "headers": {
+        "content-length": "21",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[]}}",
+      "bodyBytes": 21,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createPaste_to_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"14\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:users:6",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 148,
+      "headers": {
+        "content-length": "70",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"}]}}",
+      "bodyBytes": 70,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createPaste_to_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"1\"}}'"
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:readAndBurn:7",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 153,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query chain_createPaste_to_readAndBurn($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"14\"}}'"
+    },
+    {
+      "caseId": "gql:handle:paste:0",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 29,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"3\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:handle:users:1",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 111,
+      "headers": {
+        "content-length": "69",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}]}}",
+      "bodyBytes": 69,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"3\"}}'"
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:2",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 132,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_readAndBurn($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"3\"}}'"
+    },
+    {
+      "caseId": "gql:handle:paste:3",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 56,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"14\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:handle:paste:4",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 177,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"1\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:handle:users:5",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 125,
+      "headers": {
+        "content-length": "21",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[]}}",
+      "bodyBytes": 21,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"14\"}}'"
+    },
+    {
+      "caseId": "gql:handle:users:6",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 103,
+      "headers": {
+        "content-length": "70",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"}]}}",
+      "bodyBytes": 70,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"1\"}}'"
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:7",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 96,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_readAndBurn($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"14\"}}'"
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:8",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 56,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_readAndBurn($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"1\"}}'"
+    },
+    {
+      "caseId": "gql:handle:paste:9",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 140,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"13\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:handle:users:10",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 114,
+      "headers": {
+        "content-length": "21",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[]}}",
+      "bodyBytes": 21,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"13\"}}'"
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:11",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 78,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_readAndBurn($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"13\"}}'"
+    },
+    {
+      "caseId": "gql:handle:paste:12",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 134,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_paste($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"2\",\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:handle:users:13",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 48,
+      "headers": {
+        "content-length": "73",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"2\",\"username\":\"operator\",\"password\":\"******\"}]}}",
+      "bodyBytes": 73,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_users($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":\"2\"}}'"
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:14",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 96,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query handle_replay_readAndBurn($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":\"2\"}}'"
+    },
+    {
+      "caseId": "gql:query:users:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_users_pv0($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":1}},{\"query\":\"query Alias2 query_users_pv0($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":1}}]'"
+    },
+    {
+      "caseId": "gql:query:users:pv1:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 400,
+      "elapsedMs": 43,
+      "headers": {
+        "content-length": "625",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "[{\"errors\":[{\"message\":\"'list' object has no attribute 'get'\",\"locations\":[{\"line\":5,\"column\":9}],\"path\":[\"users\",0,\"password\"]},{\"message\":\"'list' object has no attribute 'get'\",\"locations\":[{\"line\":5,\"column\":9}],\"path\":[\"users\",1,\"password\"]},{\"message\":\"'list' object has no attribute 'get'\",\"locations\":[{\"line\":5,\"column\":9}],\"path\":[\"users\",2,\"password\"]}],\"data\":{\"users\":[null,null,null]}},{\"errors\":[{\"message\":\"Syntax Error GraphQL (1:14) Expected {, found Name \\\"query_users_pv1\\\"\\n\\n1: query Alias2 query_users_pv1($v0: Int) {\\n                ^\\n2:   users(id: $v0) {\\n\",\"locations\":[{\"line\":1,\"column\":14}]}]}]",
+      "bodyBytes": 625,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_users_pv1($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":0}},{\"query\":\"query Alias2 query_users_pv1($v0: Int) {\\n  users(id: $v0) {\\n    id\\n        username\\n        password\\n  }\\n}\",\"variables\":{\"v0\":0}}]'"
+    },
+    {
+      "caseId": "gql:query:systemUpdate:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8014,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_systemUpdate {\\n  systemUpdate\\n}\",\"variables\":{}},{\"query\":\"query Alias2 query_systemUpdate {\\n  systemUpdate\\n}\",\"variables\":{}}]'"
+    },
+    {
+      "caseId": "gql:query:deleteAllPastes:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 400,
+      "elapsedMs": 69,
+      "headers": {
+        "content-length": "262",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "[{\"data\":{\"deleteAllPastes\":true}},{\"errors\":[{\"message\":\"Syntax Error GraphQL (1:14) Expected {, found Name \\\"query_deleteAllPastes\\\"\\n\\n1: query Alias2 query_deleteAllPastes {\\n                ^\\n2:   deleteAllPastes\\n\",\"locations\":[{\"line\":1,\"column\":14}]}]}]",
+      "bodyBytes": 262,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_deleteAllPastes {\\n  deleteAllPastes\\n}\",\"variables\":{}},{\"query\":\"query Alias2 query_deleteAllPastes {\\n  deleteAllPastes\\n}\",\"variables\":{}}]'"
+    },
+    {
+      "caseId": "gql:query:paste:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 400,
+      "elapsedMs": 49,
+      "headers": {
+        "content-length": "276",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "[{\"data\":{\"paste\":null}},{\"errors\":[{\"message\":\"Syntax Error GraphQL (1:14) Expected {, found Name \\\"query_paste_pv0\\\"\\n\\n1: query Alias2 query_paste_pv0($v0: Int, $v1: String) {\\n                ^\\n2:   paste(id: $v0, title: $v1) {\\n\",\"locations\":[{\"line\":1,\"column\":14}]}]}]",
+      "bodyBytes": 276,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_paste_pv0($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":1,\"v1\":\"graphqlai\"}},{\"query\":\"query Alias2 query_paste_pv0($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":1,\"v1\":\"graphqlai\"}}]'"
+    },
+    {
+      "caseId": "gql:query:paste:pv1:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_paste_pv1($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":0,\"v1\":\"graphqlai\"}},{\"query\":\"query Alias2 query_paste_pv1($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":0,\"v1\":\"graphqlai\"}}]'"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8005,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_readAndBurn_pv0($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":1}},{\"query\":\"query Alias2 query_readAndBurn_pv0($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":1}}]'"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv1:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8003,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted",
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '[{\"query\":\"query query_readAndBurn_pv1($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":0}},{\"query\":\"query Alias2 query_readAndBurn_pv1($v0: Int) {\\n  readAndBurn(id: $v0) {\\n    id\\n        ownerId\\n        userAgent\\n        title\\n        owner {\\n        id\\n            name\\n            paste {\\n            __typename\\n          }\\n            pastes {\\n            __typename\\n          }\\n      }\\n        content\\n        public\\n        ipAddr\\n        burn\\n  }\\n}\",\"variables\":{\"v0\":0}}]'"
+    },
+    {
+      "caseId": "gql:depth:pastes:2:0",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6193,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_pastes_2($v0: Boolean, $v1: Int, $v2: String) {\\n  pastes(public: $v0, limit: $v1, filter: $v2) { __typename a0: __typename }\\n}\",\"variables\":{\"v0\":false,\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:depth:pastes:3:1",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6171,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_pastes_3($v0: Boolean, $v1: Int, $v2: String) {\\n  pastes(public: $v0, limit: $v1, filter: $v2) { __typename a0: __typename a1: __typename }\\n}\",\"variables\":{\"v0\":false,\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:depth:pastes:4:2",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6217,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_pastes_4($v0: Boolean, $v1: Int, $v2: String) {\\n  pastes(public: $v0, limit: $v1, filter: $v2) { __typename a0: __typename a1: __typename a2: __typename }\\n}\",\"variables\":{\"v0\":false,\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:depth:pastes:5:3",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6235,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_pastes_5($v0: Boolean, $v1: Int, $v2: String) {\\n  pastes(public: $v0, limit: $v1, filter: $v2) { __typename a0: __typename a1: __typename a2: __typename a3: __typename }\\n}\",\"variables\":{\"v0\":false,\"v1\":1,\"v2\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:depth:paste:2:4",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 131,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_paste_2($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) { __typename a0: __typename }\\n}\",\"variables\":{\"v0\":1,\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:depth:paste:3:5",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 130,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_paste_3($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) { __typename a0: __typename a1: __typename }\\n}\",\"variables\":{\"v0\":1,\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:depth:paste:4:6",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 85,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_paste_4($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) { __typename a0: __typename a1: __typename a2: __typename }\\n}\",\"variables\":{\"v0\":1,\"v1\":\"graphqlai\"}}'"
+    },
+    {
+      "caseId": "gql:depth:paste:5:7",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 124,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null,
+      "replayCurl": "curl -sS -X 'POST' 'http://127.0.0.1:5014/graphql' \\\n  -H 'Accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Content-Type: application/json' \\\n  --data '{\"query\":\"query depth_paste_5($v0: Int, $v1: String) {\\n  paste(id: $v0, title: $v1) { __typename a0: __typename a1: __typename a2: __typename a3: __typename }\\n}\",\"variables\":{\"v0\":1,\"v1\":\"graphqlai\"}}'"
+    }
+  ],
+  "raw": [
+    {
+      "caseId": "gql:mutation:createUser:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 56,
+      "headers": {
+        "content-length": "370",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"errors\":[{\"message\":\"(sqlite3.IntegrityError) UNIQUE constraint failed: users.username\\n[SQL: INSERT INTO users (username, email, password) VALUES (?, ?, ?)]\\n[parameters: ('admin', 'user@example.test', 'test-token')]\\n(Background on this error at: https://sqlalche.me/e/14/gkpj)\",\"locations\":[{\"line\":2,\"column\":3}],\"path\":[\"createUser\"]}],\"data\":{\"createUser\":null}}",
+      "bodyBytes": 370,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 281,
+      "headers": {
+        "content-length": "81",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"createUser\":{\"user\":{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}}}}",
+      "bodyBytes": 81,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:deletePaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 134,
+      "headers": {
+        "content-length": "40",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"deletePaste\":{\"result\":true}}}",
+      "bodyBytes": 40,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:deletePaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 84,
+      "headers": {
+        "content-length": "41",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"deletePaste\":{\"result\":false}}}",
+      "bodyBytes": 41,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 556,
+      "headers": {
+        "content-length": "401",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"createPaste\":{\"paste\":{\"id\":\"14\",\"ownerId\":1,\"userAgent\":\"node\",\"title\":\"graphqlai\",\"owner\":{\"id\":\"1\",\"name\":\"DVGAUser\",\"paste\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}],\"pastes\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}]},\"content\":\"graphqlai\",\"public\":false,\"ipAddr\":\"172.17.0.1\",\"burn\":false}}}}",
+      "bodyBytes": 401,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 411,
+      "headers": {
+        "content-length": "342",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"createPaste\":{\"paste\":{\"id\":\"13\",\"ownerId\":1,\"userAgent\":\"node\",\"title\":\"graphqlai\",\"owner\":{\"id\":\"1\",\"name\":\"DVGAUser\",\"paste\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}],\"pastes\":[{\"__typename\":\"PasteObject\"},{\"__typename\":\"PasteObject\"}]},\"content\":\"graphqlai\",\"public\":false,\"ipAddr\":\"172.17.0.1\",\"burn\":true}}}}",
+      "bodyBytes": 342,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:editPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 194,
+      "headers": {
+        "content-length": "37",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"editPaste\":{\"paste\":null}}}",
+      "bodyBytes": 37,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:editPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 403,
+      "headers": {
+        "content-length": "37",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"editPaste\":{\"paste\":null}}}",
+      "bodyBytes": 37,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:uploadPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 322,
+      "headers": {
+        "content-length": "78",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"uploadPaste\":{\"filename\":null,\"content\":null,\"result\":\"graphqlai\"}}}",
+      "bodyBytes": 78,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:uploadPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 230,
+      "headers": {
+        "content-length": "73",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:21 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"uploadPaste\":{\"filename\":null,\"content\":null,\"result\":\"test\"}}}",
+      "bodyBytes": 73,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:importPaste:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 386,
+      "headers": {
+        "content-length": "38",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"importPaste\":{\"result\":\"\"}}}",
+      "bodyBytes": 38,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:importPaste:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 289,
+      "headers": {
+        "content-length": "38",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"importPaste\":{\"result\":\"\"}}}",
+      "bodyBytes": 38,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:login:pv0",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 395,
+      "headers": {
+        "content-length": "124",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"errors\":[{\"message\":\"Authentication Failure\",\"locations\":[{\"line\":2,\"column\":3}],\"path\":[\"login\"]}],\"data\":{\"login\":null}}",
+      "bodyBytes": 124,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:login:pv1",
+      "family": "GRAPHQL_MUTATION",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 430,
+      "headers": {
+        "content-length": "571",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"login\":{\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc2Nzg2MzgyLCJuYmYiOjE3NzY3ODYzODIsImp0aSI6IjEzYjg2ZDZhLTFjODQtNGY5OS1iMDgxLTYxMDQwN2I2MTVlOSIsImlkZW50aXR5IjoiYWRtaW4iLCJleHAiOjE3NzY3OTM1ODJ9.zqqK8-tT5P-HZed2C7ODgUCDP1A0IWD7iSpwhdCKp0c\",\"refreshToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTc3Njc4NjM4MiwibmJmIjoxNzc2Nzg2MzgyLCJqdGkiOiJlZjVjNjJlNi1kMDBhLTRiNjctODk0ZS1kODEwZjdmNzI2NWMiLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNzc5Mzc4MzgyfQ.03YvFq5EEL2yu0x9BW4oT8GPYsJ4EQUFW1K6nThb0yE\"}}}",
+      "bodyBytes": 571,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:users:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 154,
+      "headers": {
+        "content-length": "70",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"}]}}",
+      "bodyBytes": 70,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:users:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 267,
+      "headers": {
+        "content-length": "172",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"},{\"id\":\"2\",\"username\":\"operator\",\"password\":\"******\"},{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}]}}",
+      "bodyBytes": 172,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:systemUpdate",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8023,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:deleteAllPastes",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 280,
+      "headers": {
+        "content-length": "33",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:22 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"deleteAllPastes\":true}}",
+      "bodyBytes": 33,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:paste:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8002,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:paste:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:pastes:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8009,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:pastes:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8022,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:systemDiagnostics:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8013,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:systemDiagnostics:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8007,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:systemDebug:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8009,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:systemDebug:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8012,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:systemHealth",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8008,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:search:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8002,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:search:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8014,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:audits",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8013,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:me:pv0",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:me:pv1",
+      "family": "GRAPHQL_QUERY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 1121,
+      "headers": {
+        "content-length": "115",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"errors\":[{\"message\":\"Not enough segments\",\"locations\":[{\"line\":2,\"column\":3}],\"path\":[\"me\"]}],\"data\":{\"me\":null}}",
+      "bodyBytes": 115,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1:chain:paste:0",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 33,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1:chain:users:1",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 107,
+      "headers": {
+        "content-length": "69",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}]}}",
+      "bodyBytes": 69,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createUser:pv1:chain:readAndBurn:2",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 57,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:paste:3",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 84,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:paste:4",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 123,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:users:5",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 119,
+      "headers": {
+        "content-length": "21",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[]}}",
+      "bodyBytes": 21,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:users:6",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 148,
+      "headers": {
+        "content-length": "70",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"}]}}",
+      "bodyBytes": 70,
+      "error": null
+    },
+    {
+      "caseId": "gql:mutation:createPaste:pv0:chain:readAndBurn:7",
+      "family": "GRAPHQL_CHAIN_FOLLOWUP",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 153,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:paste:0",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 29,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:users:1",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 111,
+      "headers": {
+        "content-length": "69",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"3\",\"username\":\"root\",\"password\":\"******\"}]}}",
+      "bodyBytes": 69,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:2",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 132,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:paste:3",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 56,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:paste:4",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 177,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:users:5",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 125,
+      "headers": {
+        "content-length": "21",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[]}}",
+      "bodyBytes": 21,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:users:6",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 103,
+      "headers": {
+        "content-length": "70",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"1\",\"username\":\"admin\",\"password\":\"******\"}]}}",
+      "bodyBytes": 70,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:7",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 96,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:8",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 56,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:55 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:paste:9",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 140,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:users:10",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 114,
+      "headers": {
+        "content-length": "21",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[]}}",
+      "bodyBytes": 21,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:11",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 78,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:paste:12",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 134,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:users:13",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 48,
+      "headers": {
+        "content-length": "73",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"users\":[{\"id\":\"2\",\"username\":\"operator\",\"password\":\"******\"}]}}",
+      "bodyBytes": 73,
+      "error": null
+    },
+    {
+      "caseId": "gql:handle:readAndBurn:14",
+      "family": "GRAPHQL_HANDLE_REPLAY",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 96,
+      "headers": {
+        "content-length": "29",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"readAndBurn\":null}}",
+      "bodyBytes": 29,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:users:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:users:pv1:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 400,
+      "elapsedMs": 43,
+      "headers": {
+        "content-length": "625",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "[{\"errors\":[{\"message\":\"'list' object has no attribute 'get'\",\"locations\":[{\"line\":5,\"column\":9}],\"path\":[\"users\",0,\"password\"]},{\"message\":\"'list' object has no attribute 'get'\",\"locations\":[{\"line\":5,\"column\":9}],\"path\":[\"users\",1,\"password\"]},{\"message\":\"'list' object has no attribute 'get'\",\"locations\":[{\"line\":5,\"column\":9}],\"path\":[\"users\",2,\"password\"]}],\"data\":{\"users\":[null,null,null]}},{\"errors\":[{\"message\":\"Syntax Error GraphQL (1:14) Expected {, found Name \\\"query_users_pv1\\\"\\n\\n1: query Alias2 query_users_pv1($v0: Int) {\\n                ^\\n2:   users(id: $v0) {\\n\",\"locations\":[{\"line\":1,\"column\":14}]}]}]",
+      "bodyBytes": 625,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:systemUpdate:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8014,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:deleteAllPastes:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 400,
+      "elapsedMs": 69,
+      "headers": {
+        "content-length": "262",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "[{\"data\":{\"deleteAllPastes\":true}},{\"errors\":[{\"message\":\"Syntax Error GraphQL (1:14) Expected {, found Name \\\"query_deleteAllPastes\\\"\\n\\n1: query Alias2 query_deleteAllPastes {\\n                ^\\n2:   deleteAllPastes\\n\",\"locations\":[{\"line\":1,\"column\":14}]}]}]",
+      "bodyBytes": 262,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:paste:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 400,
+      "elapsedMs": 49,
+      "headers": {
+        "content-length": "276",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:46:56 GMT"
+      },
+      "bodyPreview": "[{\"data\":{\"paste\":null}},{\"errors\":[{\"message\":\"Syntax Error GraphQL (1:14) Expected {, found Name \\\"query_paste_pv0\\\"\\n\\n1: query Alias2 query_paste_pv0($v0: Int, $v1: String) {\\n                ^\\n2:   paste(id: $v0, title: $v1) {\\n\",\"locations\":[{\"line\":1,\"column\":14}]}]}]",
+      "bodyBytes": 276,
+      "error": null
+    },
+    {
+      "caseId": "gql:query:paste:pv1:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8010,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8005,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:query:readAndBurn:pv1:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": null,
+      "elapsedMs": 8003,
+      "headers": {},
+      "bodyPreview": "",
+      "bodyBytes": 0,
+      "error": "This operation was aborted"
+    },
+    {
+      "caseId": "gql:depth:pastes:2:0",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6193,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null
+    },
+    {
+      "caseId": "gql:depth:pastes:3:1",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6171,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null
+    },
+    {
+      "caseId": "gql:depth:pastes:4:2",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6217,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null
+    },
+    {
+      "caseId": "gql:depth:pastes:5:3",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 6235,
+      "headers": {
+        "content-length": "22",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"pastes\":[]}}",
+      "bodyBytes": 22,
+      "error": null
+    },
+    {
+      "caseId": "gql:depth:paste:2:4",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 131,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:depth:paste:3:5",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 130,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:depth:paste:4:6",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 85,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    },
+    {
+      "caseId": "gql:depth:paste:5:7",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "method": "POST",
+      "url": "http://127.0.0.1:5014/graphql",
+      "status": 200,
+      "elapsedMs": 124,
+      "headers": {
+        "content-length": "23",
+        "content-type": "application/json",
+        "date": "Tue, 21 Apr 2026 15:47:16 GMT"
+      },
+      "bodyPreview": "{\"data\":{\"paste\":null}}",
+      "bodyBytes": 23,
+      "error": null
+    }
+  ]
+}

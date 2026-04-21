@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "description": "DVGA README scenario themes mapped to graphqlai report artifacts. manualVerdict uses: expected | noise | miss-tool | miss-target.",
+  "generatedAt": "2026-04-21T17:09:49.000Z",
+  "sourceReport": "validation/dvga/runs/20260421-170949/graphqlai-report-1776791489128.json",
+  "referenceReport": "validation/dvga/runs/20260421-161136/graphqlai-report-1776787989524.json",
+  "replaySession": {
+    "replayedAt": "2026-04-21",
+    "targetUrl": "http://127.0.0.1:5014/graphql",
+    "method": "Parsed replayCurl bodies from sourceReport and POSTed via scripts/replay-checklist-from-report.mjs (tokens not stored here).",
+    "compareRegressionRuns": [
+      "validation/dvga/runs/20260421-161136/graphqlai-report-1776787989524.json",
+      "validation/dvga/runs/20260421-170949/graphqlai-report-1776791489128.json"
+    ]
+  },
+  "comparison": {
+    "referenceRunId": "20260421-161136",
+    "currentRunId": "20260421-170949",
+    "sameFlags": {
+      "maxRequests": 220,
+      "timeoutMs": 20000,
+      "concurrency": 2,
+      "maxRps": 2,
+      "variableStrategy": "balanced (default)"
+    },
+    "reference": { "executed": 67, "findings": 19 },
+    "current": { "executed": 73, "findings": 20 },
+    "resultsFamilyDelta": {
+      "GRAPHQL_HANDLE_REPLAY": "+6 executed rows (9 → 15)",
+      "otherFamilies": "unchanged counts (mutation/query/chain/batch/depth)"
+    },
+    "interpretation": "Ballpark match for a lab regression: finding-title mix stayed similar (sensitive-pattern + timeouts + one JWT-ish signal). Extra HTTP rows are primarily handle-replay follow-ups, which depend on IDs returned during the run."
+  },
+  "beforeCodeChangeWorkflow": [
+    "Copy introspection + scope from the pinned baseline run (see docs/REGRESSION.md).",
+    "Create validation/dvga/runs/<YYYYMMDD-HHmmss>/ and run the canonical command from docs/DVGA-VALIDATION.md.",
+    "Compare results[] family histogram + findings[] title histogram to 20260421-161136 / 20260421-170949 (scripts/summarize-graphqlai-report.mjs).",
+    "Optional: replay one curl per theme (scripts/replay-checklist-from-report.mjs) after DVGA is up."
+  ],
+  "rows": [
+    {
+      "dvgaTheme": "Denial of Service — Batch Query Attack",
+      "graphqlai": { "resultsFamily": "GRAPHQL_BATCH_ALIAS", "findingTitleHint": null },
+      "exampleCaseIds": [
+        "gql:query:users:pv0:batch",
+        "gql:query:systemUpdate:batch",
+        "gql:query:paste:pv0:batch"
+      ],
+      "replayCaseId": "gql:query:users:pv0:batch",
+      "replayEvidence": {
+        "httpStatus": 400,
+        "elapsedMsApprox": 280,
+        "summary": "Batch/array POST returned GraphQL errors including Python resolver error text and a second-operation parse error — noisy, intentional DVGA-style failure surface."
+      },
+      "manualVerdict": "expected",
+      "notes": "GRAPHQL_BATCH_ALIAS probe exercised; replay confirms server returns rich error text (training data for triage, not a severity score)."
+    },
+    {
+      "dvgaTheme": "Denial of Service — Deep Recursion Query Attack",
+      "graphqlai": { "resultsFamily": "GRAPHQL_DEPTH_LADDER", "findingTitleHint": null },
+      "exampleCaseIds": ["gql:depth:pastes:2:0", "gql:depth:paste:2:4"],
+      "replayCaseId": "gql:depth:pastes:2:0",
+      "replayEvidence": {
+        "httpStatus": 200,
+        "elapsedMsApprox": 38,
+        "summary": "Valid GraphQL response envelope; depth ladder probe succeeded without server error for this depth step."
+      },
+      "manualVerdict": "expected",
+      "notes": "Correlate deeper ladder steps in report rows if DVGA recursion lab requires higher depth."
+    },
+    {
+      "dvgaTheme": "Reconnaissance / schema-driven fuzzing",
+      "graphqlai": { "surfaceSummaryField": "introspectionResponseLikely", "observationKind": "introspection_loaded" },
+      "exampleCaseIds": [],
+      "replayCaseId": null,
+      "replayEvidence": {
+        "summary": "Validated from sourceReport observationLog + surfaceSummary (no HTTP replay required for this row)."
+      },
+      "manualVerdict": "expected",
+      "notes": "Confirms graphqlai consumed introspection JSON for compilation — prerequisite for schema-driven fuzzing."
+    },
+    {
+      "dvgaTheme": "Authorization — JWT-related material in responses",
+      "graphqlai": { "findingTitle": "Looks like bearer/JWT material in body", "bountySignalId": "jwt_or_bearer_leak" },
+      "exampleCaseIds": ["gql:mutation:login:pv1"],
+      "replayCaseId": "gql:mutation:login:pv1",
+      "replayEvidence": {
+        "httpStatus": 200,
+        "elapsedMsApprox": 38,
+        "summary": "login returned accessToken and refreshToken fields (JWT-shaped); redact in external shares."
+      },
+      "manualVerdict": "expected",
+      "notes": "Matches bounty-signals jwt_or_bearer_leak intent on DVGA login flow."
+    },
+    {
+      "dvgaTheme": "Injection / verbose errors (indirect)",
+      "graphqlai": { "findingTitle": "Sensitive pattern in body preview", "resultsFamilyHint": "any" },
+      "exampleCaseIds": ["gql:mutation:createUser:pv0", "gql:query:users:pv0"],
+      "replayCaseId": "gql:mutation:createUser:pv0",
+      "replayEvidence": {
+        "httpStatus": 200,
+        "elapsedMsApprox": 40,
+        "summary": "GraphQL errors array contained SQLAlchemy/sqlite UNIQUE constraint / SQL INSERT text — strong disclosure signal for lab triage."
+      },
+      "manualVerdict": "expected",
+      "notes": "Heuristic 'sensitive pattern' aligns with echoed SQL-ish error material (DVGA injection lessons)."
+    },
+    {
+      "dvgaTheme": "Denial of Service — slow path / resource intensive (timeout signal)",
+      "graphqlai": { "findingTitle": "Transport/timeout", "resultsFamilyHint": "GRAPHQL_QUERY or GRAPHQL_BATCH_ALIAS" },
+      "exampleCaseIds": ["gql:query:systemUpdate", "gql:query:deleteAllPastes"],
+      "replayCaseId": "gql:query:systemUpdate",
+      "replayEvidence": {
+        "httpStatus": 200,
+        "elapsedMsApprox": 54704,
+        "summary": "Single-threaded replay completed (~55s) with success body under DVGA stress fuzz run may still abort under parallel budget — both can be true."
+      },
+      "manualVerdict": "expected",
+      "notes": "Treat Transport/timeout findings as saturation signals during campaigns; single-curl replay is not always slow."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "label": "Depth ladder latency ramp on same field (resource abuse signal)",
+  "results": [
+    {
+      "caseId": "gql:depth:posts:2:0",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "status": 200,
+      "elapsedMs": 40,
+      "url": "https://example.com/graphql"
+    },
+    {
+      "caseId": "gql:depth:posts:9:1",
+      "family": "GRAPHQL_DEPTH_LADDER",
+      "status": 200,
+      "elapsedMs": 2100,
+      "url": "https://example.com/graphql"
+    }
+  ]
+}

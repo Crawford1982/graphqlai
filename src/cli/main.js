@@ -17,7 +17,8 @@ function printHelp() {
 graphqlai — schema-driven GraphQL HTTP fuzzing (authorized targets only)
 
 Usage:
-  graphqlai --target <graphql-endpoint-url> --schema <introspection.json>
+  graphqlai --target <graphql-endpoint-url> --schema <path>
+  Schema path: introspection JSON (*.json) or SDL (*.graphql / *.graphqls / *.sdl)
 `);
 }
 

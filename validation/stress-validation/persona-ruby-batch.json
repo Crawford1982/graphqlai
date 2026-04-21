@@ -1,0 +1,21 @@
+{
+  "label": "Batch array with Ruby/Python resolver noise + status shift vs single op",
+  "results": [
+    {
+      "caseId": "gql:query:users:pv0",
+      "family": "GRAPHQL_QUERY",
+      "status": 200,
+      "elapsedMs": 25,
+      "bodyPreview": "{\"data\":{\"users\":[]}}",
+      "url": "https://example.com/graphql"
+    },
+    {
+      "caseId": "gql:query:users:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "status": 400,
+      "elapsedMs": 2400,
+      "bodyPreview": "[{\"errors\":[{\"message\":\"'list' object has no attribute 'get'\"}],\"data\":{\"users\":[null]}}]",
+      "url": "https://example.com/graphql"
+    }
+  ]
+}

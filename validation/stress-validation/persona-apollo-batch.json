@@ -1,0 +1,21 @@
+{
+  "label": "Array batch envelope with GraphQL errors per element (Apollo-style transport)",
+  "results": [
+    {
+      "caseId": "gql:query:items:pv0",
+      "family": "GRAPHQL_QUERY",
+      "status": 200,
+      "elapsedMs": 18,
+      "bodyPreview": "{\"data\":{\"items\":[]}}",
+      "url": "https://example.com/graphql"
+    },
+    {
+      "caseId": "gql:query:items:pv0:batch",
+      "family": "GRAPHQL_BATCH_ALIAS",
+      "status": 200,
+      "elapsedMs": 120,
+      "bodyPreview": "[{\"errors\":[{\"message\":\"cannot read field\"}],\"data\":null},{\"errors\":[{\"message\":\"limit exceeded\"}],\"data\":null}]",
+      "url": "https://example.com/graphql"
+    }
+  ]
+}

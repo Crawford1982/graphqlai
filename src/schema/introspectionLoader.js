@@ -1,10 +1,11 @@
 /**
- * GraphQL introspection JSON → normalized schema model.
- * SDL / manual seeds — future milestone.
+ * GraphQL introspection JSON or SDL file → normalized schema model.
  */
 
 import fs from 'fs';
 import path from 'path';
+
+import { buildSchema, introspectionFromSchema } from 'graphql';
 
 /**
  * @typedef {{
@@ -126,13 +127,27 @@ export function normalizeIntrospectionSchema(schemaBlock) {
 }
 
 /**
- * Load normalized schema from introspection JSON (full GraphQL response or `__schema` only).
+ * Load normalized schema from introspection JSON (full GraphQL response or `__schema` only),
+ * or from **SDL** (`.graphql`, `.graphqls`, `.sdl`) via buildSchema → introspection.
  *
  * @param {string} filePath
  * @returns {IntrospectionSchema}
  */
 export function loadIntrospectionFromFile(filePath) {
   const abs = path.resolve(filePath);
+  const ext = path.extname(abs).toLowerCase();
+  if (ext === '.graphql' || ext === '.graphqls' || ext === '.sdl') {
+    const sdl = fs.readFileSync(abs, 'utf8');
+    const gqlSchema = buildSchema(sdl);
+    const intro = introspectionFromSchema(gqlSchema);
+    const wrapper = /** @type {{ __schema?: Record<string, unknown> }} */ (intro);
+    const schemaBlock = wrapper.__schema;
+    if (!schemaBlock || typeof schemaBlock !== 'object') {
+      throw new Error(`graphqlai: SDL produced no __schema for ${abs}`);
+    }
+    return normalizeIntrospectionSchema(schemaBlock);
+  }
+
   const raw = JSON.parse(fs.readFileSync(abs, 'utf8'));
   const schemaBlock =
     raw.data && typeof raw.data === 'object' && raw.data.__schema

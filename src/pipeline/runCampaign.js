@@ -5,6 +5,8 @@ import { ObservationLog } from '../model/observationLog.js';
 import { executeCases, ensureOutputDir } from '../net/httpAgent.js';
 import { NoveltyIndex } from '../signals/noveltyIndex.js';
 import { triageResults } from '../verify/triage.js';
+import { analyzeStressProbeAnomalies } from '../verify/stressAnomalies.js';
+import { prioritizeFindingsForReport } from '../verify/findingRank.js';
 import { attachEvidenceCurls } from '../verify/evidencePack.js';
 import { buildTransportOpts } from '../safety/executorContext.js';
 import { buildBaselineFingerprints } from '../verify/baseline.js';
@@ -151,6 +153,7 @@ export async function runCampaign(cfg) {
 
   const baselines = buildBaselineFingerprints(execResults);
   let findings = triageResults(execResults);
+  findings = [...findings, ...analyzeStressProbeAnomalies(execResults)];
   findings = [...findings, ...runSignalPipeline(execResults, { evidenceHarPath: null })];
   findings = [...findings, ...checkCrossPrincipalOverlap(execResults)];
 
@@ -172,6 +175,7 @@ export async function runCampaign(cfg) {
     minimization: f.kind === 'bounty_signal' ? null : minimizationHint(casesMap.get(f.caseId)),
   }));
   findings = enrichFindingsWithStatistics(findings, execResults);
+  findings = prioritizeFindingsForReport(findings);
 
   const ts = Date.now();
   const report = {

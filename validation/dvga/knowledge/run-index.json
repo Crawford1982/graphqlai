@@ -1,0 +1,137 @@
+[
+  {
+    "runId": "20260421-154533",
+    "target": "http://127.0.0.1:5014/graphql",
+    "dvga": {
+      "image": "dolevf/dvga:latest",
+      "container": "dvga-graphqlai",
+      "hostPort": 5014,
+      "containerPort": 5013
+    },
+    "graphqlai": {
+      "command": "node bin/graphqlai.mjs --target http://127.0.0.1:5014/graphql --schema validation/dvga/runs/20260421-154533/introspection.json --scope-file validation/dvga/runs/20260421-154533/scope.yaml --max-requests 200 --output-dir validation/dvga/runs/20260421-154533",
+      "executedHttpRequests": 73,
+      "findings": 32,
+      "signalHistogram": {
+        "Transport/timeout": 21,
+        "Sensitive pattern in body preview": 10,
+        "jwt_or_bearer_leak": 1
+      },
+      "report": "validation/dvga/runs/20260421-154533/graphqlai-report-1776786437098.json",
+      "notes": "First successful end-to-end pass; introspection initially saved with UTF-8 BOM broke JSON.parse; fixed by rewriting file without BOM."
+    }
+  },
+  {
+    "runId": "20260421-161136",
+    "target": "http://127.0.0.1:5014/graphql",
+    "dvga": {
+      "image": "dolevf/dvga:latest",
+      "container": "dvga-graphqlai",
+      "hostPort": 5014,
+      "containerPort": 5013
+    },
+    "graphqlai": {
+      "command": "node bin/graphqlai.mjs --target http://127.0.0.1:5014/graphql --schema validation/dvga/runs/20260421-161136/introspection.json --scope-file validation/dvga/runs/20260421-161136/scope.yaml --max-requests 220 --timeout-ms 20000 --concurrency 2 --max-rps 2 --output-dir validation/dvga/runs/20260421-161136",
+      "executedHttpRequests": 67,
+      "findings": 19,
+      "signalHistogram": {
+        "Sensitive pattern in body preview": 14,
+        "Transport/timeout": 4,
+        "jwt_or_bearer_leak": 1
+      },
+      "report": "validation/dvga/runs/20260421-161136/graphqlai-report-1776787989524.json",
+      "notes": "Same schema snapshot + scope; tuned settings reduced timeout-heavy noise substantially."
+    }
+  },
+  {
+    "runId": "20260421-162023",
+    "target": "http://127.0.0.1:5014/graphql",
+    "dvga": {
+      "image": "dolevf/dvga:latest",
+      "container": "dvga-graphqlai",
+      "hostPort": 5014,
+      "containerPort": 5013
+    },
+    "graphqlai": {
+      "command": "node bin/graphqlai.mjs --target http://127.0.0.1:5014/graphql --schema validation/dvga/runs/20260421-162023/introspection.json --scope-file validation/dvga/runs/20260421-162023/scope.yaml --max-requests 220 --timeout-ms 20000 --concurrency 2 --max-rps 2 --variable-strategy thorough --output-dir validation/dvga/runs/20260421-162023",
+      "executedHttpRequests": 67,
+      "findings": 21,
+      "signalHistogram": {
+        "Sensitive pattern in body preview": 14,
+        "Transport/timeout": 6,
+        "jwt_or_bearer_leak": 1
+      },
+      "report": "validation/dvga/runs/20260421-162023/graphqlai-report-1776788544703.json",
+      "notes": "Thorough variable strategy vs balanced run with same transport tuning; compare against 20260421-161136 for signal mix shifts."
+    }
+  },
+  {
+    "runId": "20260421-165952",
+    "target": "http://127.0.0.1:5014/graphql",
+    "dvga": {
+      "image": "dolevf/dvga:latest",
+      "container": "dvga-graphqlai",
+      "hostPort": 5014,
+      "containerPort": 5013
+    },
+    "graphqlai": {
+      "command": "node bin/graphqlai.mjs --target http://127.0.0.1:5014/graphql --schema validation/dvga/runs/20260421-165952/introspection.json --scope-file validation/dvga/runs/20260421-165952/scope.yaml --max-requests 260 --timeout-ms 25000 --concurrency 2 --max-rps 2 --batch-budget 16 --depth-budget 16 --max-depth 8 --variable-strategy balanced --output-dir validation/dvga/runs/20260421-165952",
+      "executedHttpRequests": 89,
+      "findings": 23,
+      "signalHistogram": {
+        "Sensitive pattern in body preview": 15,
+        "Transport/timeout": 7,
+        "Looks like bearer/JWT material in body": 1
+      },
+      "resultsFamilyHistogram": {
+        "GRAPHQL_MUTATION": 14,
+        "GRAPHQL_QUERY": 20,
+        "GRAPHQL_CHAIN_FOLLOWUP": 8,
+        "GRAPHQL_HANDLE_REPLAY": 15,
+        "GRAPHQL_BATCH_ALIAS": 16,
+        "GRAPHQL_DEPTH_LADDER": 16
+      },
+      "report": "validation/dvga/runs/20260421-165952/graphqlai-report-1776790954947.json",
+      "notes": "Higher batch/depth budgets increased executed rows and DOS-family probe counts vs prior tuned runs."
+    }
+  },
+  {
+    "runId": "20260421-170949",
+    "target": "http://127.0.0.1:5014/graphql",
+    "dvga": {
+      "image": "dolevf/dvga:latest",
+      "container": "dvga-graphqlai",
+      "hostPort": 5014,
+      "containerPort": 5013
+    },
+    "graphqlai": {
+      "command": "node bin/graphqlai.mjs --target http://127.0.0.1:5014/graphql --schema validation/dvga/runs/20260421-170949/introspection.json --scope-file validation/dvga/runs/20260421-170949/scope.yaml --max-requests 220 --timeout-ms 20000 --concurrency 2 --max-rps 2 --output-dir validation/dvga/runs/20260421-170949",
+      "executedHttpRequests": 73,
+      "findings": 20,
+      "signalHistogram": {
+        "Sensitive pattern in body preview": 13,
+        "Transport/timeout": 6,
+        "Looks like bearer/JWT material in body": 1
+      },
+      "report": "validation/dvga/runs/20260421-170949/graphqlai-report-1776791489128.json",
+      "notes": "Canonical baseline regression rerun (same flags as 20260421-161136); executed count +6 vs reference mainly from extra GRAPHQL_HANDLE_REPLAY rows (data-dependent)."
+    }
+  },
+  {
+    "runId": "20260421-174642",
+    "target": "http://127.0.0.1:5014/graphql",
+    "dvga": { "image": "dolevf/dvga:latest", "container": "dvga-regr", "hostPort": 5014, "containerPort": 5013 },
+    "graphqlai": {
+      "command": "node bin/graphqlai.mjs --target http://127.0.0.1:5014/graphql --schema validation/dvga/runs/20260421-174642/introspection.json --scope-file validation/dvga/runs/20260421-174642/scope.yaml --max-requests 220 --timeout-ms 20000 --concurrency 2 --max-rps 2 --output-dir validation/dvga/runs/20260421-174642",
+      "executedHttpRequests": 73,
+      "findings": 24,
+      "signalHistogram": {
+        "kind:stress_anomaly": 4,
+        "kind:bounty_signal": 1,
+        "notes": "Remaining rows are heuristic titles (sensitive-pattern, timeouts, verbose GraphQL patterns) — see report"
+      },
+      "report": "validation/dvga/runs/20260421-174642/graphqlai-report-1776793722020.json",
+      "notes": "Post ranking + stress logic: bounty_signal then stress_anomaly rows first in findings[]; SDL + graphql dep shipped."
+    }
+  }
+]
