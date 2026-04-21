@@ -29,3 +29,7 @@ Use this when extending the tool with AI-assisted editors.
 ## Reports
 
 Campaign JSON includes **`provenance`** (**`src/verify/runProvenance.js`**) when extending **`runCampaign`** — keep metadata accurate (versions, deps, optional git SHA) so disclosure packets stay auditable.
+
+CLI transport flags (**`-H`**, **`--cookie`**, optional **`--respect-retry-after`**) flow through **`buildTransportOpts`** into **`executeCases`** — preserve ordering in **`mergeTransportHeaders`** (`src/net/httpAgent.js`) when adding headers.
+
+Future **LLM advisor**: **`docs/ADVISOR.md`** — no raw query execution from model output; validate JSON plans before **`runCampaign`**.

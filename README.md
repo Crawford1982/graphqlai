@@ -42,6 +42,10 @@ Product stance (GraphQL-only, surgical scope): **`docs/POSITIONING.md`**
 
 **Trust & verification:** **`docs/CONFIDENCE.md`** — offline test matrix, CI, single HTTP execution path, report **`provenance`**, and honest limits. **`graphqlai --version`** (`-V`) prints semver and runtime fingerprint.
 
+**Human-readable report:** after a run, **`npm run report:html -- output/graphqlai-report-*.json`** writes a **static `.html`** next to the JSON (open locally; no server).
+
+**Publishing to npm:** **`docs/PUBLISH-NPM.md`**. **Advisor (LLM) roadmap:** **`docs/ADVISOR.md`** — not shipped yet; deterministic JSON remains authoritative.
+
 Progress and handoff notes live in:
 
 - `docs/STATUS.md`
@@ -65,9 +69,15 @@ graphqlai -t https://api.example.com/graphql -s ./schema.json -a "YOUR_JWT"
 # or
 GRAPHQLAI_TOKEN=... graphqlai -t ... -s ... --auth-env GRAPHQLAI_TOKEN
 
+# explicit headers (API keys, non-Bearer Authorization, cookies to session GraphQL):
+graphqlai -t ... -s ... -H "X-Api-Key: ***" --cookie "sessionid=..."
+graphqlai -t ... -s ... -H "Authorization: ApiKey ***"
+
 # optional alternate principal replay (Milestone 2)
 graphqlai -t ... -s ... --auth-env PRIMARY_TOKEN --auth-alt-env ALT_TOKEN --principal-replay-budget 12
 ```
+
+Inbound throttling (optional): **`--respect-retry-after`** sleeps up to **`--max-retry-after-ms`** then retries each request at most **`--max-429-retries`** times when the server returns **429** with **`Retry-After`**.
 
 ### Milestone 2 options
 

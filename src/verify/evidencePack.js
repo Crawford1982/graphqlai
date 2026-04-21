@@ -6,7 +6,11 @@
 
 /**
  * @param {FuzzCase} c
- * @param {{ authHeader?: string | null }} opts
+ * @param {{
+ *   authHeader?: string | null,
+ *   extraHeaders?: Record<string, string>,
+ *   cookieHeader?: string | null,
+ * }} opts
  */
 export function fuzzCaseToCurl(c, opts = {}) {
   const method = (c.method || 'GET').toUpperCase();
@@ -20,6 +24,10 @@ export function fuzzCaseToCurl(c, opts = {}) {
   const parts = [`curl -sS -X ${shellQuote(method)} ${shellQuote(url)}`];
 
   const headers = { ...(c.headers || {}) };
+  Object.assign(headers, opts.extraHeaders || {});
+  if (opts.cookieHeader && !headers.Cookie && !headers.cookie) {
+    headers.Cookie = opts.cookieHeader;
+  }
   if (opts.authHeader && !c.omitAuth) {
     const a = opts.authHeader.startsWith('Bearer ') ? opts.authHeader : `Bearer ${opts.authHeader}`;
     if (!headers.Authorization && !headers.authorization) headers.Authorization = a;

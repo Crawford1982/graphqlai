@@ -44,8 +44,13 @@ export async function runCampaign(cfg) {
   const transport = buildTransportOpts({
     timeoutMs: cfg.timeoutMs,
     authHeader: cfg.auth ?? null,
+    extraHeaders: cfg.extraHeaders && typeof cfg.extraHeaders === 'object' ? cfg.extraHeaders : {},
+    cookieHeader: cfg.cookieHeader ?? null,
     scopePolicy: cfg.scopePolicy ?? null,
     maxRps: cfg.maxRps ?? 0,
+    respectRetryAfter: cfg.respectRetryAfter ?? false,
+    max429Retries: cfg.max429Retries,
+    maxRetryAfterMs: cfg.maxRetryAfterMs,
   });
 
   const previewCap = Number.isFinite(cfg.maxResponseBodyChars) ? cfg.maxResponseBodyChars : 8192;
@@ -60,6 +65,9 @@ export async function runCampaign(cfg) {
   const surface = await probeGraphqlEndpoint(cfg.target, {
     timeoutMs: cfg.timeoutMs,
     authHeader: authHeaderNorm,
+    extraHeaders:
+      cfg.extraHeaders && typeof cfg.extraHeaders === 'object' ? cfg.extraHeaders : {},
+    cookieHeader: cfg.cookieHeader ?? null,
     scopePolicy: cfg.scopePolicy ?? null,
     rateLimiter: transport.rateLimiter,
   });
@@ -149,7 +157,13 @@ export async function runCampaign(cfg) {
   }
 
   const casesMap = new Map(cases.map((c) => [c.id, c]));
-  const resultsWithEvidence = attachEvidenceCurls(execResults, casesMap, { authHeader: cfg.auth || null });
+  const extraHdr =
+    cfg.extraHeaders && typeof cfg.extraHeaders === 'object' ? cfg.extraHeaders : {};
+  const resultsWithEvidence = attachEvidenceCurls(execResults, casesMap, {
+    authHeader: authHeaderNorm,
+    extraHeaders: extraHdr,
+    cookieHeader: cfg.cookieHeader ?? null,
+  });
   const sanitizedResults = resultsWithEvidence.map(stripReplayBlob);
   const sanitizedRaw = execResults.map(stripReplayBlob);
 
@@ -182,6 +196,15 @@ export async function runCampaign(cfg) {
 
   const ts = Date.now();
   const bountyCorrelationSummary = summarizeBountyCorrelation(findings);
+
+  const responses429 = execResults.filter((r) => /** @type {any} */ (r).status === 429).length;
+  const rateLimitSummary = {
+    responsesWithStatus429: responses429,
+    rowsWithRetryAfterHint: execResults.filter((r) => /** @type {any} */ (r).retryAfterSec != null)
+      .length,
+    rowsRetriedAfter429: execResults.filter((r) => /** @type {any} */ (r).retriedAfter429 > 0).length,
+  };
+
   const provenance = buildReportProvenance(
     cfg.packageMeta && typeof cfg.packageMeta === 'object'
       ? /** @type {Record<string, unknown>} */ (cfg.packageMeta)
@@ -202,6 +225,11 @@ export async function runCampaign(cfg) {
       timeoutMs: cfg.timeoutMs,
       maxRps: cfg.maxRps ?? 0,
       scopePolicy: Boolean(cfg.scopePolicy),
+      respectRetryAfter: cfg.respectRetryAfter ?? false,
+      max429Retries:
+        cfg.max429Retries !== undefined ? Math.max(0, Number(cfg.max429Retries)) : 1,
+      maxRetryAfterMs:
+        cfg.maxRetryAfterMs !== undefined ? Math.max(0, Number(cfg.maxRetryAfterMs)) : 60000,
       maxResponseBodyChars: previewCap,
       chainBudget: cfg.chainBudget ?? 0,
       handleReplayBudget: appliedHandleBudget,
@@ -221,6 +249,18 @@ export async function runCampaign(cfg) {
       introspectionResponseLikely: surface.introspectionResponseLikely,
     },
     bountyCorrelation: bountyCorrelationSummary,
+    rateLimitSummary,
+    transport: {
+      extraHeaderKeys: Object.keys(extraHdr),
+      cookieFromFlag: Boolean(cfg.cookieHeader),
+      respectRetryAfter: cfg.respectRetryAfter ?? false,
+    },
+    advisor: {
+      phase: 'planned',
+      status: 'not_configured',
+      note:
+        'Deterministic findings above are authoritative. Optional LLM narrative layer will consume schema summaries + JSON only — see docs/ADVISOR.md.',
+    },
     observationLog: log.snapshot(),
     dependencyGraph: { mutationToQueryEdges: edges },
     executed: execResults.length,

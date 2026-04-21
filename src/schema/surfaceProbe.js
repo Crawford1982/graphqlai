@@ -9,6 +9,8 @@ import { assertUrlInScope } from '../safety/scopePolicy.js';
  * @param {{
  *   timeoutMs: number,
  *   authHeader?: string | null,
+ *   extraHeaders?: Record<string, string>,
+ *   cookieHeader?: string | null,
  *   scopePolicy?: import('../safety/scopePolicy.js').ScopePolicy | null,
  *   rateLimiter?: { acquire: () => Promise<void> },
  * }} opts
@@ -23,10 +25,16 @@ export async function probeGraphqlEndpoint(endpointUrl, opts) {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
+  Object.assign(headers, opts.extraHeaders || {});
+  if (opts.cookieHeader && !headers.Cookie && !headers.cookie) {
+    headers.Cookie = opts.cookieHeader;
+  }
   if (opts.authHeader) {
-    headers.Authorization = opts.authHeader.startsWith('Bearer ')
-      ? opts.authHeader
-      : `Bearer ${opts.authHeader}`;
+    if (!headers.Authorization && !headers.authorization) {
+      headers.Authorization = opts.authHeader.startsWith('Bearer ')
+        ? opts.authHeader
+        : `Bearer ${opts.authHeader}`;
+    }
   }
 
   const probeBodies = [

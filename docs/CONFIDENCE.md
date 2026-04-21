@@ -6,7 +6,11 @@ This document explains **why you can rely on graphqlai’s engineering disciplin
 
 ### Single outbound path
 
-All HTTP traffic goes through **`src/net/httpAgent.js`** (`fetch` only). Planners and compilers do not open sockets themselves, which keeps behavior auditable and limits accidental scope creep.
+All HTTP traffic goes through **`src/net/httpAgent.js`** (`fetch` only).
+
+### Rate limiting from the server
+
+Outbound **`--max-rps`** caps traffic you send. **`--respect-retry-after`** (optional) reacts to inbound **429** responses by waiting per **`Retry-After`** once per row (bounded). Default remains **fail fast on 429** — no silent long backoff unless you opt in. Planners and compilers do not open sockets themselves, which keeps behavior auditable and limits accidental scope creep.
 
 ### Offline test suite (`npm test`)
 

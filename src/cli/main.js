@@ -9,6 +9,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { headerPairsToObject } from './headerPairs.js';
+
 const pkgPath = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 
@@ -21,6 +23,21 @@ Usage:
   Schema path: introspection JSON (*.json) or SDL (*.graphql / *.graphqls / *.sdl)
 
   graphqlai --version   (-V)   print tool and runtime fingerprint
+
+Auth / headers:
+  --auth / -a <token>          shorthand for Authorization: Bearer <token>
+  --header / -H "Name: value"  extra header (repeat). Full Authorization / API keys / cookies supported.
+  --cookie "a=b; c=d"          sets Cookie header when not already set via -H
+
+Scope & safety:
+  --scope-file <yaml>          strongly recommended for real targets (see docs/REAL-TARGET-TESTING.md)
+  --no-scope-warning           suppress stderr warning when omitting scope (lab only)
+  Env: GRAPHQLAI_ALLOW_NO_SCOPE=1 — same as --no-scope-warning
+
+Rate limits (inbound):
+  --respect-retry-after        on HTTP 429, honor Retry-After once per request (bounded; see limits)
+  --max-429-retries <n>        default 1 when respecting Retry-After
+  --max-retry-after-ms <n>     cap wait (default 60000)
 `);
 }
 
@@ -32,7 +49,13 @@ function printVersion(p) {
 }
 
 export async function main() {
-  const args = parseArgv(process.argv);
+  let args;
+  try {
+    args = parseArgv(process.argv);
+  } catch (e) {
+    console.error((/** @type {Error} */ (e)).message || e);
+    process.exit(2);
+  }
   if (args.help) {
     printHelp();
     process.exit(0);
@@ -93,6 +116,19 @@ export async function main() {
     }
   }
 
+  const allowNoScope =
+    Boolean(args.noScopeWarning) ||
+    process.env.GRAPHQLAI_ALLOW_NO_SCOPE === '1' ||
+    /^true$/i.test(String(process.env.GRAPHQLAI_ALLOW_NO_SCOPE || ''));
+  if (!args.scopeFile && !allowNoScope && !ci) {
+    console.warn(`
+[graphqlai] WARNING: running without --scope-file. Only the URL constrains requests; mistakes can send traffic outside your authorization.
+  For bounty/real targets use --scope-file (docs/REAL-TARGET-TESTING.md). For labs: --no-scope-warning or GRAPHQLAI_ALLOW_NO_SCOPE=1.
+`);
+  }
+
+  const extraHeaders = headerPairsToObject(args.extraHeaders);
+
   const { outfile, report } = await runCampaign({
     target: String(cfg.target),
     schemaPath: String(cfg.schemaPath),
@@ -115,6 +151,11 @@ export async function main() {
     maxDepth: /** @type {number} */ (cfg.maxDepth),
     toolVersion: pkg.version,
     packageMeta: pkg,
+    extraHeaders,
+    cookieHeader: args.cookie ? String(args.cookie).trim() || null : null,
+    respectRetryAfter: Boolean(args.respectRetryAfter),
+    max429Retries: Number.isFinite(args.max429Retries) ? args.max429Retries : 1,
+    maxRetryAfterMs: Number.isFinite(args.maxRetryAfterMs) ? args.maxRetryAfterMs : 60000,
   });
 
   console.log(`\nReport: ${outfile}`);

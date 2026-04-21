@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { assertUrlInScope, checkRedirectPolicy } from '../safety/scopePolicy.js';
+import { parseRetryAfterSeconds, sleep } from './retryAfter.js';
 
 /**
  * @typedef {import('../types.js').FuzzCase} FuzzCase
@@ -17,10 +18,15 @@ import { assertUrlInScope, checkRedirectPolicy } from '../safety/scopePolicy.js'
  *   concurrency: number,
  *   timeoutMs: number,
  *   authHeader?: string | null,
+ *   extraHeaders?: Record<string, string>,
+ *   cookieHeader?: string | null,
  *   captureFullBody?: boolean,
  *   scopePolicy?: import('../safety/scopePolicy.js').ScopePolicy | null,
  *   rateLimiter?: { acquire: () => Promise<void> },
  *   maxBodyPreviewChars?: number,
+ *   respectRetryAfter?: boolean,
+ *   max429Retries?: number,
+ *   maxRetryAfterMs?: number,
  * }} opts
  */
 export async function executeCases(cases, opts) {
@@ -39,15 +45,13 @@ export async function executeOne(c, opts) {
  * @param {FuzzCase} c
  * @param {Omit<Parameters<typeof executeCases>[1], 'concurrency'>} opts
  */
-async function runOne(c, opts) {
-  const previewCap = Math.min(
-    Math.max(512, opts.maxBodyPreviewChars ?? 8192),
-    2_000_000
-  );
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), opts.timeoutMs);
+function mergeTransportHeaders(c, opts) {
   const headers = { ...(c.headers || {}) };
-
+  const extra = opts.extraHeaders && typeof opts.extraHeaders === 'object' ? opts.extraHeaders : {};
+  Object.assign(headers, extra);
+  if (opts.cookieHeader && !headers.Cookie && !headers.cookie) {
+    headers.Cookie = opts.cookieHeader;
+  }
   if (opts.authHeader && !c.omitAuth) {
     if (!headers.Authorization && !headers.authorization) {
       headers.Authorization = opts.authHeader.startsWith('Bearer ')
@@ -55,6 +59,15 @@ async function runOne(c, opts) {
         : `Bearer ${opts.authHeader}`;
     }
   }
+  return headers;
+}
+
+async function runOne(c, opts) {
+  const previewCap = Math.min(
+    Math.max(512, opts.maxBodyPreviewChars ?? 8192),
+    2_000_000
+  );
+  const headers = mergeTransportHeaders(c, opts);
 
   let url = c.url;
   if (c.meta && c.meta.query) {
@@ -65,7 +78,6 @@ async function runOne(c, opts) {
 
   const scopeCheck = assertUrlInScope(url, opts.scopePolicy);
   if (!scopeCheck.ok) {
-    clearTimeout(t);
     return {
       caseId: c.id,
       family: c.family,
@@ -95,8 +107,19 @@ async function runOne(c, opts) {
   }
 
   const started = Date.now();
+  const maxRetries = Math.max(0, Number(opts.max429Retries ?? 1));
+  const respect429 = Boolean(opts.respectRetryAfter);
+  const maxDelayMs = Math.min(Math.max(0, Number(opts.maxRetryAfterMs ?? 60000)), 300000);
+
+  /** @type {ReturnType<typeof setTimeout> | undefined} */
+  let outerTimer;
+
   try {
-    const res = await fetch(url, {
+    let ctrl = new AbortController();
+    outerTimer = setTimeout(() => ctrl.abort(), opts.timeoutMs);
+
+    /** @type {Response} */
+    let res = await fetch(url, {
       method: c.method || 'GET',
       headers,
       redirect: 'manual',
@@ -104,10 +127,33 @@ async function runOne(c, opts) {
       ...(body !== undefined ? { body } : {}),
     });
 
+    let retried429 = 0;
+    while (
+      res.status === 429 &&
+      respect429 &&
+      retried429 < maxRetries
+    ) {
+      await res.text();
+      clearTimeout(outerTimer);
+      const sec = parseRetryAfterSeconds(res.headers);
+      const delayMs = Math.min(Math.max(0, (sec ?? 1) * 1000), maxDelayMs);
+      await sleep(delayMs);
+      retried429++;
+      ctrl = new AbortController();
+      outerTimer = setTimeout(() => ctrl.abort(), opts.timeoutMs);
+      res = await fetch(url, {
+        method: c.method || 'GET',
+        headers,
+        redirect: 'manual',
+        signal: ctrl.signal,
+        ...(body !== undefined ? { body } : {}),
+      });
+    }
+
     const rd = checkRedirectPolicy(url, res.status, res.headers, opts.scopePolicy);
     if (!rd.ok) {
       const bodyText = await res.text();
-      clearTimeout(t);
+      clearTimeout(outerTimer);
       return {
         caseId: c.id,
         family: c.family,
@@ -119,15 +165,18 @@ async function runOne(c, opts) {
         bodyPreview: bodyText.slice(0, previewCap),
         bodyBytes: Buffer.byteLength(bodyText, 'utf8'),
         error: `redirect_policy:${rd.reason}${rd.location ? ` → ${rd.location}` : ''}`,
+        ...(res.status === 429 ? { retryAfterSec: parseRetryAfterSeconds(res.headers) } : {}),
+        ...(retried429 > 0 ? { retriedAfter429: retried429 } : {}),
       };
     }
 
     const bodyText = await res.text();
-    clearTimeout(t);
+    clearTimeout(outerTimer);
     const elapsed = Date.now() - started;
 
     const cap = Boolean(opts.captureFullBody);
-    return {
+    /** @type {Record<string, unknown>} */
+    const row = {
       caseId: c.id,
       family: c.family,
       method: c.method || 'GET',
@@ -140,8 +189,13 @@ async function runOne(c, opts) {
       bodyBytes: Buffer.byteLength(bodyText, 'utf8'),
       error: null,
     };
+    if (res.status === 429) {
+      row.retryAfterSec = parseRetryAfterSeconds(res.headers);
+    }
+    if (retried429 > 0) row.retriedAfter429 = retried429;
+    return row;
   } catch (e) {
-    clearTimeout(t);
+    if (outerTimer) clearTimeout(outerTimer);
     return {
       caseId: c.id,
       family: c.family,
