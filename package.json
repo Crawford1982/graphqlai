@@ -14,6 +14,7 @@
   "scripts": {
     "start": "node bin/graphqlai.mjs",
     "graphqlai": "node bin/graphqlai.mjs",
+    "gui": "node scripts/serve-gui.mjs",
     "test": "npm run test:schema && npm run test:sdl && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress && npm run test:stress-anomalies && npm run test:stress-personas && npm run test:finding-rank && npm run test:bounty-correlation && npm run test:provenance && npm run test:retry-after && npm run test:submission-bundles",
     "regression:summary": "node scripts/summarize-graphqlai-report.mjs",
     "regression:replay": "node scripts/replay-checklist-from-report.mjs",
@@ -49,6 +50,8 @@
   "files": [
     "bin",
     "src",
+    "gui",
+    "scripts/serve-gui.mjs",
     "LICENSE",
     "SECURITY.md",
     "docs/REAL-TARGET-TESTING.md",

@@ -25,6 +25,16 @@ npm link
 graphqlai --help
 ```
 
+### Web launch helper (local browser)
+
+From the repo root, start a tiny local page that **builds a ready-to-run command** with **bounty-safe rate limits** (paste target URL + schema path, then copy into the terminal):
+
+```bash
+npm run gui
+```
+
+Open **http://127.0.0.1:8790** — nothing is uploaded; it only generates text. For a static file without the server, open **`gui/index.html`** directly.
+
 ## Usage
 
 **`--target`** must be the full HTTP(S) URL of the GraphQL endpoint (typically `POST` only).  

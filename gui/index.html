@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>graphqlai — launch helper</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --border: #2d3a4d;
+      --text: #e7ecf3;
+      --muted: #8b9cb3;
+      --accent: #3d8bfd;
+      --accent-dim: #2563c4;
+      --warn: #f59e0b;
+      --ok: #34d399;
+      --font: system-ui, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font);
+      background: linear-gradient(165deg, #0a0e14 0%, var(--bg) 40%);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 2rem 1.25rem 3rem;
+    }
+    .wrap { max-width: 42rem; margin: 0 auto; }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.25rem;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.75rem;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0d1218;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(61, 139, 253, 0.2);
+    }
+    textarea { min-height: 6.5rem; resize: vertical; }
+    .row { margin-bottom: 1rem; }
+    .row:last-child { margin-bottom: 0; }
+    .hint { font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; }
+    .preset-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      background: #152032;
+      color: var(--ok);
+      margin-left: 0.35rem;
+      font-weight: 600;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.25rem;
+    }
+    button {
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.65rem 1.1rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s;
+    }
+    button:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-secondary {
+      background: #243044;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #2c3c54; }
+    .warn-box {
+      border-left: 3px solid var(--warn);
+      padding: 0.65rem 0.85rem;
+      background: rgba(245, 158, 11, 0.08);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.85rem;
+      color: #fcd9a8;
+      margin-bottom: 1rem;
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    #toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e3a2f;
+      border: 1px solid var(--ok);
+      color: #a7f3d0;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    #toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>graphqlai launch helper</h1>
+    <p class="sub">
+      Builds a CLI command with <strong>bounty-safe defaults</strong> (rate &amp; concurrency caps).
+      Runs on your machine — paste into PowerShell or Git Bash from the <strong>graphqlai repo root</strong>.
+    </p>
+
+    <div class="warn-box">
+      Authorized targets only. Never paste production secrets into shared machines. This page does not send data anywhere — it only runs in your browser.
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <label for="preset">Preset <span class="preset-badge">limits enforced</span></label>
+        <select id="preset">
+          <option value="bounty">Bounty-safe (strict) — 5 RPS, conc 5, moderate budgets</option>
+          <option value="minimal">Minimal probe — fewer requests, faster smoke test</option>
+          <option value="lab">Local lab (DVGA-style) — slightly higher budgets, still bounded</option>
+        </select>
+        <p class="hint" id="presetDetail"></p>
+      </div>
+
+      <div class="row">
+        <label for="target">GraphQL endpoint URL</label>
+        <input id="target" type="url" placeholder="https://api.example.com/graphql" autocomplete="off" spellcheck="false" />
+      </div>
+
+      <div class="row">
+        <label for="schema">Schema file path</label>
+        <input id="schema" type="text" placeholder=".\fixtures\example-minimal-introspection.json or path\to\introspection.json" spellcheck="false" />
+        <p class="hint">Introspection JSON or SDL (.graphql / .graphqls)</p>
+      </div>
+
+      <div class="row">
+        <label for="scope">Scope YAML (recommended)</label>
+        <input id="scope" type="text" placeholder=".\scope.yaml — optional but strongly recommended" spellcheck="false" />
+      </div>
+
+      <div class="row">
+        <label for="auth">Bearer token (optional)</label>
+        <input id="auth" type="password" placeholder="leave empty if unauthenticated" autocomplete="off" />
+        <p class="hint">Shown in generated command — clear the field before sharing your screen.</p>
+      </div>
+
+      <div class="row">
+        <label>
+          <input type="checkbox" id="noExport" />
+          Skip submission pack (<code>--no-export-submissions</code>)
+        </label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <label for="cmd">Generated command (PowerShell)</label>
+      <textarea id="cmd" readonly spellcheck="false"></textarea>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="gen">Generate / refresh</button>
+        <button type="button" class="btn-secondary" id="copy">Copy to clipboard</button>
+      </div>
+    </div>
+
+    <footer>
+      graphqlai — see repo <code>docs/REAL-TARGET-TESTING.md</code> · start: <code>npm run gui</code>
+    </footer>
+  </div>
+  <div id="toast" role="status">Copied</div>
+
+  <script>
+    const PRESETS = {
+      bounty: {
+        label: 'Matches common program caps: ≤5 req/s across tools, ≤5 concurrent.',
+        args: {
+          maxRps: 5,
+          concurrency: 5,
+          timeoutMs: 15000,
+          maxRequests: 120,
+          batchBudget: 4,
+          depthBudget: 4,
+          chainBudget: 6,
+          handleReplayBudget: 16,
+          principalReplayBudget: 8,
+          maxPayloadVariants: 2,
+          variableStrategy: 'balanced',
+        },
+      },
+      minimal: {
+        label: 'Small footprint — good for first touch on a new target.',
+        args: {
+          maxRps: 5,
+          concurrency: 3,
+          timeoutMs: 12000,
+          maxRequests: 64,
+          batchBudget: 2,
+          depthBudget: 2,
+          chainBudget: 4,
+          handleReplayBudget: 12,
+          principalReplayBudget: 6,
+          maxPayloadVariants: 2,
+          variableStrategy: 'balanced',
+        },
+      },
+      lab: {
+        label: 'For local DVGA / lab containers — still capped; not for flooding production.',
+        args: {
+          maxRps: 2,
+          concurrency: 2,
+          timeoutMs: 20000,
+          maxRequests: 120,
+          batchBudget: 8,
+          depthBudget: 8,
+          chainBudget: 8,
+          handleReplayBudget: 24,
+          principalReplayBudget: 12,
+          maxPayloadVariants: 2,
+          variableStrategy: 'balanced',
+        },
+      },
+    };
+
+    const presetEl = document.getElementById('preset');
+    const presetDetail = document.getElementById('presetDetail');
+    const cmdEl = document.getElementById('cmd');
+
+    function escPs(s) {
+      return String(s).replace(/'/g, "''");
+    }
+
+    function buildCommand() {
+      const p = PRESETS[presetEl.value];
+      presetDetail.textContent = p.label;
+      const a = p.args;
+
+      const target = document.getElementById('target').value.trim();
+      const schema = document.getElementById('schema').value.trim();
+      const scope = document.getElementById('scope').value.trim();
+      const auth = document.getElementById('auth').value.trim();
+      const noExport = document.getElementById('noExport').checked;
+
+      const parts = [
+        'node bin/graphqlai.mjs',
+        `--target '${escPs(target)}'`,
+        `-s '${escPs(schema)}'`,
+        `--max-rps ${a.maxRps}`,
+        `-c ${a.concurrency}`,
+        `--timeout-ms ${a.timeoutMs}`,
+        `--max-requests ${a.maxRequests}`,
+        `--batch-budget ${a.batchBudget}`,
+        `--depth-budget ${a.depthBudget}`,
+        `--chain-budget ${a.chainBudget}`,
+        `--handle-replay-budget ${a.handleReplayBudget}`,
+        `--principal-replay-budget ${a.principalReplayBudget}`,
+        `--max-payload-variants ${a.maxPayloadVariants}`,
+        `--variable-strategy ${a.variableStrategy}`,
+      ];
+
+      if (scope) parts.splice(4, 0, `--scope-file '${escPs(scope)}'`);
+      if (auth) parts.push(`-a '${escPs(auth)}'`);
+      if (noExport) parts.push('--no-export-submissions');
+
+      cmdEl.value = parts.join(' \\\n  ');
+    }
+
+    document.getElementById('gen').addEventListener('click', buildCommand);
+    presetEl.addEventListener('change', buildCommand);
+    ['target', 'schema', 'scope', 'auth'].forEach((id) => {
+      document.getElementById(id).addEventListener('input', buildCommand);
+    });
+    document.getElementById('noExport').addEventListener('change', buildCommand);
+
+    document.getElementById('copy').addEventListener('click', async () => {
+      buildCommand();
+      try {
+        await navigator.clipboard.writeText(cmdEl.value);
+        const t = document.getElementById('toast');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 1800);
+      } catch {
+        cmdEl.select();
+      }
+    });
+
+    presetEl.dispatchEvent(new Event('change'));
+    buildCommand();
+  </script>
+</body>
+</html>
