@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node bin/graphqlai.mjs",
     "graphqlai": "node bin/graphqlai.mjs",
-    "test": "npm run test:schema && npm run test:sdl && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress && npm run test:stress-anomalies && npm run test:stress-personas && npm run test:finding-rank && npm run test:bounty-correlation && npm run test:provenance && npm run test:retry-after",
+    "test": "npm run test:schema && npm run test:sdl && npm run test:compile && npm run test:variable && npm run test:hypothesis && npm run test:planner && npm run test:handle && npm run test:principal && npm run test:stress && npm run test:stress-anomalies && npm run test:stress-personas && npm run test:finding-rank && npm run test:bounty-correlation && npm run test:provenance && npm run test:retry-after && npm run test:submission-bundles",
     "regression:summary": "node scripts/summarize-graphqlai-report.mjs",
     "regression:replay": "node scripts/replay-checklist-from-report.mjs",
     "regression:introspect": "node scripts/pull-introspection.mjs",
@@ -34,6 +34,8 @@
     "test:provenance": "node scripts/test-run-provenance.mjs",
     "test:retry-after": "node scripts/test-retry-after-parse.mjs",
     "report:html": "node scripts/render-report-html.mjs",
+    "submission:export": "node scripts/export-submission-pack.mjs",
+    "test:submission-bundles": "node scripts/test-submission-bundles.mjs",
     "verify": "npm test"
   },
   "keywords": [
@@ -53,7 +55,9 @@
     "docs/BOUNTY-CORRELATION.md",
     "docs/CONFIDENCE.md",
     "docs/ADVISOR.md",
-    "docs/PUBLISH-NPM.md"
+    "docs/PUBLISH-NPM.md",
+    "docs/SUBMISSION-BUNDLE.md",
+    "schemas/submission-bundle.schema.json"
   ],
   "dependencies": {
     "graphql": "^16.11.0",

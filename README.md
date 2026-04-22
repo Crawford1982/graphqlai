@@ -40,6 +40,8 @@ Product stance (GraphQL-only, surgical scope): **`docs/POSITIONING.md`**
 
 **Bounty triage (report fields):** **`docs/BOUNTY-CORRELATION.md`** — `payoutCorrelationScore`, axes, and how sorting uses them (heuristic only).
 
+**Submission pack (bounty / ops workflow):** after each run, **`submission-pack-<ts>/`** with **SUBMISSION.md** + **bundle.json** per finding — **`docs/SUBMISSION-BUNDLE.md`**. Opt out: **`--no-export-submissions`**. Rebuild from an old JSON: **`npm run submission:export -- path/to/graphqlai-report.json`**.
+
 **Trust & verification:** **`docs/CONFIDENCE.md`** — offline test matrix, CI, single HTTP execution path, report **`provenance`**, and honest limits. **`graphqlai --version`** (`-V`) prints semver and runtime fingerprint.
 
 **Human-readable report:** after a run, **`npm run report:html -- output/graphqlai-report-*.json`** writes a **static `.html`** next to the JSON (open locally; no server).

@@ -9,6 +9,8 @@ import { analyzeStressProbeAnomalies } from '../verify/stressAnomalies.js';
 import { prioritizeFindingsForReport } from '../verify/findingRank.js';
 import { enrichFindingsWithBountyCorrelation, summarizeBountyCorrelation } from '../verify/bountyCorrelation.js';
 import { buildReportProvenance } from '../verify/runProvenance.js';
+import { buildSubmissionBundlesFromReport } from '../submissions/submissionBundles.js';
+import { writeSubmissionPackToDir } from '../submissions/writeSubmissionPack.js';
 import { attachEvidenceCurls } from '../verify/evidencePack.js';
 import { buildTransportOpts } from '../safety/executorContext.js';
 import { buildBaselineFingerprints } from '../verify/baseline.js';
@@ -271,6 +273,25 @@ export async function runCampaign(cfg) {
 
   const outDir = ensureOutputDir(cfg.outputDir);
   const outfile = path.join(outDir, `graphqlai-report-${ts}.json`);
+
+  if (cfg.exportSubmissions !== false) {
+    const bundles = buildSubmissionBundlesFromReport(report);
+    const submissionPackPath = path.join(outDir, `submission-pack-${ts}`);
+    writeSubmissionPackToDir(submissionPackPath, bundles, {
+      report,
+      reportPath: outfile,
+      target: cfg.target,
+      generatedAt: String(report.generatedAt || ''),
+      toolVersion: String(report.toolVersion || '0.2.0'),
+    });
+    report.submissionPack = {
+      path: submissionPackPath,
+      bundleCount: bundles.length,
+      schemaVersion: '1.0.0',
+      indexMarkdown: path.join(submissionPackPath, 'INDEX.md'),
+    };
+  }
+
   fs.writeFileSync(outfile, JSON.stringify(report, null, 2));
   return { outfile, report };
 }

@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graphqlai.dev/schemas/submission-bundle-v1.json",
+  "title": "graphqlai SubmissionBundle v1",
+  "type": "object",
+  "required": ["schemaVersion", "id", "evidencePairKind", "readiness", "submissionReady", "title", "category", "operatorChecklist"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "pattern": "^finding-[0-9]{3}-.+$" },
+    "source": {
+      "type": "object",
+      "required": ["findingIndex", "caseId", "kind"],
+      "properties": {
+        "findingIndex": { "type": "integer", "minimum": 0 },
+        "caseId": { "type": ["string", "null"] },
+        "kind": { "type": "string" },
+        "checkerId": { "type": ["string", "null"] },
+        "signalId": { "type": ["string", "null"] }
+      }
+    },
+    "readiness": { "enum": ["hypothesis", "confirmed_candidate"] },
+    "submissionReady": { "type": "boolean" },
+    "submissionReadyReason": { "type": "string" },
+    "title": { "type": "string" },
+    "category": { "type": "string" },
+    "severityHint": { "type": ["string", "null"] },
+    "confidence": { "type": ["number", "null"] },
+    "payoutCorrelationScore": { "type": ["integer", "null"], "minimum": 1, "maximum": 10 },
+    "evidencePairKind": {
+      "enum": [
+        "two_principals",
+        "single_operation",
+        "batch_compare",
+        "depth_probe",
+        "information_disclosure"
+      ]
+    },
+    "diffSummary": { "type": "string" },
+    "evidenceA": { "$ref": "#/definitions/evidencePacketNullable" },
+    "evidenceB": { "$ref": "#/definitions/evidencePacketNullable" },
+    "operatorChecklist": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "escalationHints": { "type": "array", "items": { "type": "string" } },
+    "repro": {
+      "type": "object",
+      "properties": {
+        "notes": { "type": "string" },
+        "primaryCurlFile": { "type": ["string", "null"] },
+        "alternateCurlFile": { "type": ["string", "null"] }
+      }
+    },
+    "programNotes": {
+      "type": "object",
+      "properties": {
+        "redaction": { "type": "string" },
+        "scope": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "evidencePacketNullable": {
+      "oneOf": [{ "$ref": "#/definitions/evidencePacket" }, { "type": "null" }]
+    },
+    "evidencePacket": {
+      "type": "object",
+      "required": ["role", "caseId", "status"],
+      "properties": {
+        "role": { "enum": ["primary", "alternate", "single", "observation"] },
+        "caseId": { "type": ["string", "null"] },
+        "status": { "type": ["integer", "null"] },
+        "elapsedMs": { "type": ["number", "null"] },
+        "replayCurl": { "type": ["string", "null"] },
+        "bodyPreviewSnippet": { "type": ["string", "null"] },
+        "graphqlErrorMessages": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -32,6 +32,7 @@ export function parseArgv(argv) {
     respectRetryAfter: false,
     max429Retries: 1,
     maxRetryAfterMs: 60000,
+    exportSubmissions: true,
   };
 
   for (let i = 2; i < argv.length; i++) {
@@ -75,6 +76,7 @@ export function parseArgv(argv) {
     else if (a === '--respect-retry-after') args.respectRetryAfter = true;
     else if (a === '--max-429-retries') args.max429Retries = Math.max(0, Number(argv[++i]));
     else if (a === '--max-retry-after-ms') args.maxRetryAfterMs = Math.max(0, Number(argv[++i]));
+    else if (a === '--no-export-submissions') args.exportSubmissions = false;
   }
   return args;
 }

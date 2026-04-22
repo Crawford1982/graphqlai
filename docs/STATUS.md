@@ -28,6 +28,7 @@ Updated: 2026-04-21
 - **Bounty triage metadata** — each finding can include **`payoutCorrelationScore`**, **`bountyAxes`**, and short **typical program** copy; report includes **`bountyCorrelation`** summary (`src/verify/bountyCorrelation.js`, **`docs/BOUNTY-CORRELATION.md`**) — **heuristic prioritization only**
 - **Report provenance + confidence doc** — JSON **`provenance`** block (`src/verify/runProvenance.js`: Node/OS, declared deps, optional **`gitSha`**, CI flag); rationale in **`docs/CONFIDENCE.md`**; **`graphqlai --version`** for quick fingerprinting
 - **Cli safety & realism** — stderr warning when **`--scope-file`** is omitted (suppress with **`GRAPHQLAI_ALLOW_NO_SCOPE`** / **`--no-scope-warning`**); **`-H` / `--cookie`** for cookie and non-Bearer auth; optional **`--respect-retry-after`** for bounded 429 handling; **`report.advisor`** placeholder (**`docs/ADVISOR.md`**); static **`npm run report:html`** viewer; **`docs/PUBLISH-NPM.md`**
+- **Submission bundles** — default **`submission-pack-<ts>/`** (**`SUBMISSION.md`**, **`bundle.json`**, repro stubs, **`schemas/submission-bundle.schema.json`**) — **`docs/SUBMISSION-BUNDLE.md`** — opt out **`--no-export-submissions`**; offline **`npm run submission:export`**
 
 ## Latest verification run
 

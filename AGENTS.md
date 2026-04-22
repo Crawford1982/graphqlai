@@ -33,3 +33,7 @@ Campaign JSON includes **`provenance`** (**`src/verify/runProvenance.js`**) when
 CLI transport flags (**`-H`**, **`--cookie`**, optional **`--respect-retry-after`**) flow through **`buildTransportOpts`** into **`executeCases`** — preserve ordering in **`mergeTransportHeaders`** (`src/net/httpAgent.js`) when adding headers.
 
 Future **LLM advisor**: **`docs/ADVISOR.md`** — no raw query execution from model output; validate JSON plans before **`runCampaign`**.
+
+## Submission bundles
+
+Deterministic **`submission-pack-*/`** output lives in **`src/submissions/`** + **`schemas/submission-bundle.schema.json`**. Extend **`buildSubmissionBundlesFromReport`** when new finding kinds need paired evidence — keep **`submissionReady`** conservative (**`docs/SUBMISSION-BUNDLE.md`**).

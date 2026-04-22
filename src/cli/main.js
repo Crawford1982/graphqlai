@@ -38,6 +38,10 @@ Rate limits (inbound):
   --respect-retry-after        on HTTP 429, honor Retry-After once per request (bounded; see limits)
   --max-429-retries <n>        default 1 when respecting Retry-After
   --max-retry-after-ms <n>     cap wait (default 60000)
+
+Submission export (default ON):
+  Writes submission-pack-<ts>/ with SUBMISSION.md + bundle.json per finding — see docs/SUBMISSION-BUNDLE.md
+  --no-export-submissions      skip writing the submission pack (JSON report only)
 `);
 }
 
@@ -156,11 +160,16 @@ export async function main() {
     respectRetryAfter: Boolean(args.respectRetryAfter),
     max429Retries: Number.isFinite(args.max429Retries) ? args.max429Retries : 1,
     maxRetryAfterMs: Number.isFinite(args.maxRetryAfterMs) ? args.maxRetryAfterMs : 60000,
+    exportSubmissions: args.exportSubmissions !== false,
   });
 
   console.log(`\nReport: ${outfile}`);
   console.log(`Executed HTTP requests: ${report.executed}`);
   console.log(`Findings: ${report.findings.length}`);
+  if (report.submissionPack?.path) {
+    console.log(`Submission pack: ${report.submissionPack.path}`);
+    console.log(`  → Open INDEX.md for operator-grade bundles (${report.submissionPack.bundleCount} items).`);
+  }
   const exitCode = resolveExitCode(report, { ci, failOnFindings: Boolean(args.ciFailOnFindings) });
   process.exit(exitCode);
 }
